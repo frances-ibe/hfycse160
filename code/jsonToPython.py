@@ -37,7 +37,7 @@ def jsonToDictList(fileName, attributes):
             dictList.append(parsedObjDict)  # update the dict list
 
     jsonFile.close()
-    
+
     return dictList
 
 
@@ -56,4 +56,4 @@ def _parseDict(dictionary, attributes):
     except KeyError:  # if a given attribute not in the dictionary return None
         return None
 
-    return dict(zip(keysList, valuesList))  # return a dictionary
+    return dict(zip(attributes, valuesList))  # return a dictionary
