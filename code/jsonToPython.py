@@ -47,17 +47,9 @@ def _parseDict(dictionary, attributes):
 
     To Do: fix conversion of attributes tuple to list 2/13/19
     """
-    # convert attributes to a list
-    if len(attributes) == 1:  # note this is an ugly solution to a problem with convert
-                     # from a tuple to a list, may just be able to pass in an
-                     # attribute list instead
-        keysList = [attributes]
-    else:
-        keysList = list(attributes)
-    print(keysList)
     try:
         # use list comprehension to return list of values from the attributes
-        valuesList = [dictionary[key] for key in keysList]
+        valuesList = [dictionary[key] for key in attributes]
     except KeyError:  # if a given attribute not in the dictionary return None
         return None
 
