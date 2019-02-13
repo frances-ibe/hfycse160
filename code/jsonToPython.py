@@ -13,7 +13,7 @@ import json
 # update list
 # return list
 
-
+# this is fun
 def jsonToDict(fileName, attributes):
     """Converts .json file to python list of dictionaries.
 
