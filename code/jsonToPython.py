@@ -28,13 +28,16 @@ def jsonToDictList(fileName, attributes):
     assert fileName[-5:] == '.json', 'The file inputted is not .json' + fileName
 
     dictList = []  # create empty list to store object dictionaries
-    for object in open(fileName, 'r'):  # loop through .json objects
+    jsonFile = open(fileName, 'r')  # open json File
+    for object in jsonFile:  # loop through .json objects
         objDict = json.loads(object)  # load on object from .json file as dict
         parsedObjDict = _parseDict(objDict, attributes)  # parse for attributes
         # parsedObjDict will  be none if objDict doesn not contain attributes
         if parsedObjDict is not None:
             dictList.append(parsedObjDict)  # update the dict list
 
+    jsonFile.close()
+    
     return dictList
 
 
