@@ -24,26 +24,24 @@ d = []
 for zip in irsData["postalCode"]:
     zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
     zipPrice.astype(int)
-    d.append({"postalCode": zip, "averagePrice": np.mean(zipPrice)})
+    d.append({"postalCode": zip, "avgPrice": np.mean(zipPrice)})
 yelpAvg = pd.DataFrame(d)
 
 #merge yelp and zillow data
 # yzi = zillowData.copy()
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
-yzi = pd.merge(yzi, yelpAvg[['postalCode', 'averagePrice']], on='postalCode')
-yziFilt = yzi[["income", "zhvi", "averagePrice"]]
+yzi = pd.merge(yzi, yelpAvg[['postalCode', 'avgPrice']], on='postalCode')
+yziFilt = yzi[["income", "zhvi", "avgPrice"]]
 
 # # Compute Correlation Statistics Between household income and median home value
 # # Will utilze the IRS dataset
 corrDF = yziFilt.corr(method='pearson')
 print(corrDF)
-#
-# print(corrDF)
-#
+
 # # Plot Grid of Scatter Plots
 # fig1 = plt.figure()
 # # WE NEED TO CHANGE THE NAMES HERE
-# plt.plot(yzi["HOUSEING"], yzi["RESTPRICE"],'.')
+# plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
 # plt.plot(yzi["HOUSEING"], yzi["INCOME"],'.')
 # plt.plot(yzi["income"], yzi["RESTPRICE"],'.')
 
