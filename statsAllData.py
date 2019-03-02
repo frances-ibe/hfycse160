@@ -16,14 +16,29 @@ irsData.sort_values(by=["postalCode"])
 
 yelpData = pd.read_csv("vegasRest.csv")
 yelpData.sort_values(by=["postalCode"])
-
 ### Note: the yelp data with city="Las Vegas" appears to have some mislabeled
 # data, some of the zip codes are in other cities such as 85705 in Tucson
+
+# average yelp rating
+d = []
+# print(yelpData)
+# yelpData = yelpData[yelpData.price.notnull()]
+# print(yelpData)
+for zip in irsData["postalCode"]:
+    zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
+    print(zipPrice)
+    zipPrice.astype(int)
+    d.append({"postalCode": zip, "averagePrice": np.mean(zipPrice)})
+yelpAvg = pd.DataFrame(d)
+# print(yelpAvg)
 
 #merge yelp and zillow data
 # yzi = zillowData.copy()
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
+<<<<<<< HEAD
 #print(yzi)
+=======
+>>>>>>> 933fdc2909d68c735d6b3e34fb5222ff847872be
 
 # # Compute Correlation Statistics Between household income and median home value
 # # Will utilze the IRS dataset
