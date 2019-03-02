@@ -26,11 +26,10 @@ d = []
 # print(yelpData)
 for zip in irsData["postalCode"]:
     zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
-    print(zipPrice)
     zipPrice.astype(int)
     d.append({"postalCode": zip, "averagePrice": np.mean(zipPrice)})
 yelpAvg = pd.DataFrame(d)
-# print(yelpAvg)
+print(yelpAvg)
 
 #merge yelp and zillow data
 # yzi = zillowData.copy()
@@ -58,15 +57,15 @@ yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
 # socioeconomic factors such as median house value and average household income? """
 
 
-
-
-restByZip = dict.fromkeys(irsData["postalCode"], 0)
-for rest in list(yelpData.itertuples(index=False, name=None)):
-    if rest[2] in list(restByZip.keys()):
-        if rest[4] in ['1','2','3','4']:
-            restByZip[rest[2]][rest[4]] = restByZip[rest[2]][rest[4]].append(rest[3])
-
-print(len(restByZip[89156]['3']) == len(restByZip[89109]['3']))
+#
+#
+# restByZip = dict.fromkeys(irsData["postalCode"], 0)
+# for rest in list(yelpData.itertuples(index=False, name=None)):
+#     if rest[2] in list(restByZip.keys()):
+#         if rest[4] in ['1','2','3','4']:
+#             restByZip[rest[2]][rest[4]] = restByZip[rest[2]][rest[4]].append(rest[3])
+#
+# print(len(restByZip[89156]['3']) == len(restByZip[89109]['3']))
 
 # output = {}
 # for zip in
