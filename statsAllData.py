@@ -56,4 +56,33 @@ yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
 # """ Does restaurant star rating across price point level vary for different zip code areas?
 # What are trends in such variance across zip code areas and how does it relate to
 # socioeconomic factors such as median house value and average household income? """
-# for zip in irsData['postalCode']
+
+
+
+
+restByZip = dict.fromkeys(irsData["postalCode"], 0)
+for rest in list(yelpData.itertuples(index=False, name=None)):
+    if rest[2] in list(restByZip.keys()):
+        if rest[4] in ['1','2','3','4']:
+            restByZip[rest[2]][rest[4]] = restByZip[rest[2]][rest[4]].append(rest[3])
+
+print(len(restByZip[89156]['3']) == len(restByZip[89109]['3']))
+
+# output = {}
+# for zip in
+
+# avg = dict.fromkeys(list(restByZip.keys()), [[],[],[],[]])
+# print(avg)
+#
+#
+# moo = list(avg.keys())
+# print(moo)
+# for item in avg[moo[0]]:
+# avg[moo[0]][0] = sum(restByZip[moo[0]]['1'])
+# avg[moo[0]][1] = sum(restByZip[moo[0]]['2'])
+# avg[moo[0]][2] = sum(restByZip[moo[0]]['3'])
+# print(avg)
+# for zip in list(avg.keys()):
+#     for price in list(avg[zip].keys()):
+#         avg[zip][price] = sum(restByZip[zip][price])
+#         #print(restByZip[zip][price])
