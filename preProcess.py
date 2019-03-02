@@ -7,13 +7,13 @@ data file"""
 
 import json
 import pandas as pd
+import os
 # take in attributes of interest form user
 # create empty list to output
 # loop through the .json file
 # for each .json object query and create a dictionary with attributes of interest
 # update list
 # return list
-
 
 def jsonToDictList(fileName, attributes):
     """Converts .json file to python list of dictionaries.
