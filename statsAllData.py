@@ -35,10 +35,6 @@ yelpAvg = pd.DataFrame(d)
 #merge yelp and zillow data
 # yzi = zillowData.copy()
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
-<<<<<<< HEAD
-#print(yzi)
-=======
->>>>>>> 933fdc2909d68c735d6b3e34fb5222ff847872be
 
 # # Compute Correlation Statistics Between household income and median home value
 # # Will utilze the IRS dataset
