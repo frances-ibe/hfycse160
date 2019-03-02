@@ -47,7 +47,7 @@ def dictToCSVDF(zillow_dict):
     return zillowDF
 
 
-def zillowCSVWrite(zillowDataFrame, fileName = "vegasHousing"):
+def zillowCSVWrite(zillowDataFrame, fileName="vegasHousing"):
     """This function takes in the output from zillowForCSV and a filename without
     the CSV extention and writes a CSV file from the data frame with the postal
     codes and zhvi"""
@@ -55,7 +55,7 @@ def zillowCSVWrite(zillowDataFrame, fileName = "vegasHousing"):
     zillowDataFrame.to_csv(str(fileName) + '.csv')
     return None
 
-def zillPreProcess(fileNameIn, fileNameOut = "vegasHousing", targetCity = "Las Vegas"):
+def zillPreProcess(fileNameIn, fileNameOut="vegasHousing", targetCity="Las Vegas"):
     """This function takes in the filename of the csv with zillow data as fileNameIn
     and takes in a fileNameOut and then also takes in a targetCity that is default
     to Las Vegas"""
@@ -65,7 +65,7 @@ def zillPreProcess(fileNameIn, fileNameOut = "vegasHousing", targetCity = "Las V
     zillowCSVWrite(zillowDF2, fileName = fileNameOut)
     return None
 
-def zipcodeList(fileNameIn = "Zip_Zhvi_Summary_AllHomes.csv", targetCity = "Las Vegas"):
+def zipcodeList(fileNameIn="Zip_Zhvi_Summary_AllHomes.csv", targetCity="Las Vegas"):
     """This Function takes in the fileNameIn of the csv with the zillow data in it
     and the targetCity that is default set to Las Vegas and returns list of
     postal codes from the las vegas city"""
