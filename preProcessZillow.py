@@ -62,7 +62,7 @@ def zillPreProcess(fileNameIn, fileNameOut="vegasHousing", targetCity="Las Vegas
     zillowDF1 = readInData(fileNameIn)
     zillowDict1 = usefulDict(zillowDF1, targetCity)
     zillowDF2 = dictToCSVDF(zillowDict1)
-    zillowCSVWrite(zillowDF2, fileName = fileNameOut)
+    zillowCSVWrite(zillowDF2, fileName=fileNameOut)
     return None
 
 def zipcodeList(fileNameIn="Zip_Zhvi_Summary_AllHomes.csv", targetCity="Las Vegas"):

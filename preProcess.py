@@ -76,8 +76,8 @@ def filterBusinessCity(businessList, targetCity):
                 # create a dicitonary with the desired attributes
 
                 restAttr = {"business_id": business["business_id"], "city": business["city"],
-                            "postal_code": business["postal_code"], "stars": business["stars"],
-                            "RestaurantsPriceRange2": business["attributes"]["RestaurantsPriceRange2"]}
+                            "postalCode": business["postal_code"], "stars": business["stars"],
+                            "price": business["attributes"]["RestaurantsPriceRange2"]}
                 restaurantsList.append(restAttr)  # add business to rest list
     else:
         for business in businessList:  # loop through all restaurants
@@ -85,8 +85,8 @@ def filterBusinessCity(businessList, targetCity):
             if business["attributes"] != None and business["postal_code"] is not "" and "RestaurantsPriceRange2" in business["attributes"].keys() and str(targetCity) == business["city"]:
                 # create a dicitonary with the desired attributes
                 restAttr = {"business_id": business["business_id"], "city": business["city"],
-                            "postal_code": business["postal_code"], "stars": business["stars"],
-                            "RestaurantsPriceRange2": business["attributes"]["RestaurantsPriceRange2"]}
+                            "postalCode": business["postal_code"], "stars": business["stars"],
+                            "price": business["attributes"]["RestaurantsPriceRange2"]}
                 # add business to rest list
                 restaurantsList.append(restAttr)
 
