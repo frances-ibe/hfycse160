@@ -71,7 +71,7 @@ print(corrDF)
 #     numRestByZip.append(tempDictCnts)
 #
 # avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframs
+# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
 #
 # print(avgRatingByZipDF)
 # print(numRestByZipDF)
