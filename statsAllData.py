@@ -21,68 +21,59 @@ yelpData.sort_values(by=["postalCode"])
 
 # average yelp rating
 d = []
-# print(yelpData)
-# yelpData = yelpData[yelpData.price.notnull()]
-# print(yelpData)
 for zip in irsData["postalCode"]:
     zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
-    print(zipPrice)
     zipPrice.astype(int)
-    d.append({"postalCode": zip, "averagePrice": np.mean(zipPrice)})
+    d.append({"postalCode": zip, "avgPrice": np.mean(zipPrice)})
 yelpAvg = pd.DataFrame(d)
-# print(yelpAvg)
 
 #merge yelp and zillow data
 # yzi = zillowData.copy()
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
+yzi = pd.merge(yzi, yelpAvg[['postalCode', 'avgPrice']], on='postalCode')
+yziFilt = yzi[["income", "zhvi", "avgPrice"]]
 
 # # Compute Correlation Statistics Between household income and median home value
 # # Will utilze the IRS dataset
-# corrDF = yzi.corr(method='pearson')
-#
-# print(corrDF)
-#
+corrDF = yziFilt.corr(method='pearson')
+print(corrDF)
+
 # # Plot Grid of Scatter Plots
-# fig1 = plt.figure()
-# # WE NEED TO CHANGE THE NAMES HERE
-# plt.plot(yzi["HOUSEING"], yzi["RESTPRICE"],'.')
-# plt.plot(yzi["HOUSEING"], yzi["INCOME"],'.')
-# plt.plot(yzi["income"], yzi["RESTPRICE"],'.')
+fig1 = plt.figure()
+# plt.subplot(3,1,1)
+plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
+# plt.subplot(3,1,2)
+fig2 = plt.figure()
+plt.plot(yzi["zhvi"], yzi["income"],'.')
+# plt.subplot(3,1,3)
+fig3 = plt.figure()
+plt.plot(yzi["income"], yzi["avgPrice"],'.')
+plt.show()
 
 
-
-
-# ## Research Question 3
-# """ Does restaurant star rating across price point level vary for different zip code areas?
-# What are trends in such variance across zip code areas and how does it relate to
-# socioeconomic factors such as median house value and average household income? """
-
-
-
-
-restByZip = dict.fromkeys(irsData["postalCode"], 0)
-for rest in list(yelpData.itertuples(index=False, name=None)):
-    if rest[2] in list(restByZip.keys()):
-        if rest[4] in ['1','2','3','4']:
-            restByZip[rest[2]][rest[4]] = restByZip[rest[2]][rest[4]].append(rest[3])
-
-print(len(restByZip[89156]['3']) == len(restByZip[89109]['3']))
-
-# output = {}
-# for zip in
-
-# avg = dict.fromkeys(list(restByZip.keys()), [[],[],[],[]])
-# print(avg)
 #
+# # ## Research Question 3
+# # """ Does restaurant star rating across price point level vary for different zip code areas?
+# # What are trends in such variance across zip code areas and how does it relate to
+# # socioeconomic factors such as median house value and average household income? """
 #
-# moo = list(avg.keys())
-# print(moo)
-# for item in avg[moo[0]]:
-# avg[moo[0]][0] = sum(restByZip[moo[0]]['1'])
-# avg[moo[0]][1] = sum(restByZip[moo[0]]['2'])
-# avg[moo[0]][2] = sum(restByZip[moo[0]]['3'])
-# print(avg)
-# for zip in list(avg.keys()):
-#     for price in list(avg[zip].keys()):
-#         avg[zip][price] = sum(restByZip[zip][price])
-#         #print(restByZip[zip][price])
+# avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
+# numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
+#
+# for zip in irsData["postalCode"]:  # loop through zip codes
+#     rests = yelpData[yelpData["postalCode"] == zip]  # get all rows such that the zip code is zip
+#     # temp dictionaries
+#     tempDictAvgs = {"postalCode":zip}
+#     tempDictCnts = {"postalCode":zip}
+#
+#     for priceLevel in [1, 2, 3, 4]:  # loop through possible price points
+#         restsPPnt = rests[rests["price"] == priceLevel]["stars"]  # filter by price level
+#         tempDictAvgs[priceLevel] = np.mean(np.array(restsPPnt))
+#         tempDictCnts[priceLevel] = len(restsPPnt)
+#
+#     avgRatingByZip.append(tempDictAvgs)
+#     numRestByZip.append(tempDictCnts)
+#
+# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
+# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
+#
