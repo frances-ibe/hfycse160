@@ -39,12 +39,16 @@ corrDF = yziFilt.corr(method='pearson')
 print(corrDF)
 
 # # Plot Grid of Scatter Plots
-# fig1 = plt.figure()
-# # WE NEED TO CHANGE THE NAMES HERE
-# plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
-# plt.plot(yzi["HOUSEING"], yzi["INCOME"],'.')
-# plt.plot(yzi["income"], yzi["RESTPRICE"],'.')
-
+fig1 = plt.figure()
+# plt.subplot(3,1,1)
+plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
+# plt.subplot(3,1,2)
+fig2 = plt.figure()
+plt.plot(yzi["zhvi"], yzi["income"],'.')
+# plt.subplot(3,1,3)
+fig3 = plt.figure()
+plt.plot(yzi["income"], yzi["avgPrice"],'.')
+plt.show()
 
 
 #
@@ -70,8 +74,11 @@ print(corrDF)
 #     avgRatingByZip.append(tempDictAvgs)
 #     numRestByZip.append(tempDictCnts)
 #
+<<<<<<< HEAD
 # avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
 # numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
+=======
+# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
+# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
+>>>>>>> 4d8073975ebbef1bcd266c4570b71216a7e24923
 #
-# print(avgRatingByZipDF)
-# print(numRestByZipDF)
