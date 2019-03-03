@@ -91,3 +91,25 @@ for zip in irsData["postalCode"]:
 restRatio = pd.DataFrame(restRatio)
 wRating = pd.DataFrame(wRating)
 wRating.fillna(0)
+=======
+# avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
+# numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
+#
+# for zip in irsData["postalCode"]:  # loop through zip codes
+#     rests = yelpData[yelpData["postalCode"] == zip]  # get all rows such that the zip code is zip
+#     # temp dictionaries
+#     tempDictAvgs = {"postalCode":zip}
+#     tempDictCnts = {"postalCode":zip}
+#
+#     for priceLevel in [1, 2, 3, 4]:  # loop through possible price points
+#         restsPPnt = rests[rests["price"] == priceLevel]["stars"]  # filter by price level
+#         tempDictAvgs[priceLevel] = np.mean(np.array(restsPPnt))
+#         tempDictCnts[priceLevel] = len(restsPPnt)
+#
+#     avgRatingByZip.append(tempDictAvgs)
+#     numRestByZip.append(tempDictCnts)
+#
+# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
+# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
+# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
+# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
