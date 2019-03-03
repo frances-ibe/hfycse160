@@ -74,6 +74,11 @@ plt.show()
 #     avgRatingByZip.append(tempDictAvgs)
 #     numRestByZip.append(tempDictCnts)
 #
+<<<<<<< HEAD
+# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
+# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
+=======
 # avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
 # numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
+>>>>>>> 4d8073975ebbef1bcd266c4570b71216a7e24923
 #
