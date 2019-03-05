@@ -28,6 +28,7 @@ for zip in irsData["postalCode"]:
 yelpAvg = pd.DataFrame(d)
 
 #merge yelp and zillow data
+# yzi = zillowData.copy()
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
 yzi = pd.merge(yzi, yelpAvg[['postalCode', 'avgPrice']], on='postalCode')
 yziFilt = yzi[["income", "zhvi", "avgPrice"]]
@@ -35,10 +36,10 @@ yziFilt = yzi[["income", "zhvi", "avgPrice"]]
 # # Compute Correlation Statistics Between household income and median home value
 # # Will utilze the IRS dataset
 corrDF = yziFilt.corr(method='pearson')
-# print(corrDF)
+print(corrDF)
 
 # # Plot Grid of Scatter Plots
-# fig1 = plt.figure()corrDF = yziFilt.corr(method='pearson')
+# fig1 = plt.figure()
 # # plt.subplot(3,1,1)
 # plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
 # # plt.subplot(3,1,2)
@@ -91,46 +92,38 @@ for zip in irsData["postalCode"]:
 restRatio = pd.DataFrame(restRatio)
 wRating = pd.DataFrame(wRating)
 wRating.fillna(0)
-<<<<<<< HEAD
-=======
-# avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
-# numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
-#
-# for zip in irsData["postalCode"]:  # loop through zip codes
-#     rests = yelpData[yelpData["postalCode"] == zip]  # get all rows such that the zip code is zip
-#     # temp dictionaries
-#     tempDictAvgs = {"postalCode":zip}
-#     tempDictCnts = {"postalCode":zip}
-#
-#     for priceLevel in [1, 2, 3, 4]:  # loop through possible price points
-#         restsPPnt = rests[rests["price"] == priceLevel]["stars"]  # filter by price level
-#         tempDictAvgs[priceLevel] = np.mean(np.array(restsPPnt))
-#         tempDictCnts[priceLevel] = len(restsPPnt)
-#
-#     avgRatingByZip.append(tempDictAvgs)
-#     numRestByZip.append(tempDictCnts)
-#
-<<<<<<< HEAD
-# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
-#
-=======
-# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
-# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
->>>>>>> f98d1401ea55fc62cc5c850b59a96ecfd87ebc82
-=======
 
-## Calculate Correlation
-aRIncome = pd.merge(irsData, avgRatingByZipDF, on='postalCode')
-rRIncome = pd.merge(irsData, restRatio, on='postalCode')
-wRIncome = pd.merge(irsData, wRating, on='postalCode')
 
-aRICorr = aRIncome[[1, 2, 3, 4, "income"]].corr(method='pearson')
-print(aRICorr)
-rRICorr = rRIncome[[1, 2, 3, 4, "income"]].corr(method='pearson')
-print(rRICorr)
-wRICorr = wRIncome[[1, 2, 3, 4, "income"]].corr(method='pearson')
-print(wRICorr)
->>>>>>> 2849d45b8b11635c6e03a3ebe635141c9749a205
+# Avg Rating yelp at different price points
+# vs Median household income
+AvgVsZhvi = plt.figure()
+plt.subplot(4,1,1)
+plt.plot(avgRatingByZipDF[1], yzi["zhvi"], '.')
+plt.subplot(4,1,2)
+plt.plot(avgRatingByZipDF[2], yzi["zhvi"], '.')
+plt.subplot(4,1,3)
+plt.plot(avgRatingByZipDF[3], yzi["zhvi"], '.')
+plt.subplot(4,1,4)
+plt.plot(avgRatingByZipDF[4], yzi["zhvi"], '.')
+#plt.show()
+
+avgRatingZhviDF = pd.merge(avgRatingByZipDF, yzi[["postalCode","zhvi"]], on="postalCode")
+#print(avgRatingZhviDF)
+corrRatingZhviDF = avgRatingZhviDF.corr(method='pearson')
+print(corrRatingZhviDF)
+
+weightedAvgVsZhvi = plt.figure()
+plt.subplot(4,1,1)
+plt.plot(wRating[1], yzi["zhvi"], '.')
+plt.subplot(4,1,2)
+plt.plot(wRating[2], yzi["zhvi"], '.')
+plt.subplot(4,1,3)
+plt.plot(wRating[3], yzi["zhvi"], '.')
+plt.subplot(4,1,4)
+plt.plot(wRating[4], yzi["zhvi"], '.')
+plt.show()
+
+weightAvgZhvi = pd.merge(wRating, yzi[["postalCode","zhvi"]], on="postalCode")
+
+corrWeightAvgZhvi = weightAvgZhvi.corr(method='pearson')
+print(corrWeightAvgZhvi)
