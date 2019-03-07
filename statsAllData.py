@@ -91,32 +91,33 @@ for zip in irsData["postalCode"]:
 restRatio = pd.DataFrame(restRatio)
 wRating = pd.DataFrame(wRating)
 wRating.fillna(0)
-# avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
-# numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
-#
-# for zip in irsData["postalCode"]:  # loop through zip codes
-#     rests = yelpData[yelpData["postalCode"] == zip]  # get all rows such that the zip code is zip
-#     # temp dictionaries
-#     tempDictAvgs = {"postalCode":zip}
-#     tempDictCnts = {"postalCode":zip}
-#
-#     for priceLevel in [1, 2, 3, 4]:  # loop through possible price points
-#         restsPPnt = rests[rests["price"] == priceLevel]["stars"]  # filter by price level
-#         tempDictAvgs[priceLevel] = np.mean(np.array(restsPPnt))
-#         tempDictCnts[priceLevel] = len(restsPPnt)
-#
-#     avgRatingByZip.append(tempDictAvgs)
-#     numRestByZip.append(tempDictCnts)
-#
 
-# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
-#
+avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
+numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
 
-# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
-# avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
-# numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
+for zip in irsData["postalCode"]:  # loop through zip codes
+    rests = yelpData[yelpData["postalCode"] == zip]  # get all rows such that the zip code is zip
+    # temp dictionaries
+    tempDictAvgs = {"postalCode":zip}
+    tempDictCnts = {"postalCode":zip}
+
+    for priceLevel in [1, 2, 3, 4]:  # loop through possible price points
+        restsPPnt = rests[rests["price"] == priceLevel]["stars"]  # filter by price level
+        tempDictAvgs[priceLevel] = np.mean(np.array(restsPPnt))
+        tempDictCnts[priceLevel] = len(restsPPnt)
+
+    avgRatingByZip.append(tempDictAvgs)
+    numRestByZip.append(tempDictCnts)
+
+
+avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
+numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
+
+
+avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframes
+numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframes
+avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
+numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
 
 
 ## Calculate Correlation
@@ -130,14 +131,14 @@ rRICorr = rRIncome[[1, 2, 3, 4, "income"]].corr(method='pearson')
 
 figAvgI, axAvgI = plt.subplots(2, 2, sharex='col', sharey='row')
 axAvgI[0, 0].scatter(aRIncome["income"], aRIncome[1], s=5)
-axAvg[0, 1].scatter(aRIncome["income"], aRIncome[2], s=5)
-ax[1, 0].scatter(aRIncome["income"], aRIncome[3], s=5)
-ax[1, 1].scatter(aRIncome["income"], aRIncome[4], s=5)
+axAvgI[0, 1].scatter(aRIncome["income"], aRIncome[2], s=5)
+axAvgI[1, 0].scatter(aRIncome["income"], aRIncome[3], s=5)
+axAvgI[1, 1].scatter(aRIncome["income"], aRIncome[4], s=5)
 plt.show()
 
-fig, ax = plt.subplots(2, 2, sharex='col', sharey='row')
-ax[0, 0].scatter(aRIncome["income"], aRIncome[1], s=5)
-ax[0, 1].scatter(aRIncome["income"], aRIncome[2], s=5)
-ax[1, 0].scatter(aRIncome["income"], aRIncome[3], s=5)
-ax[1, 1].scatter(aRIncome["income"], aRIncome[4], s=5)
+figNumI, axNumI = plt.subplots(2, 2, sharex='col', sharey='row')
+axNumI[0, 0].scatter(rRIncome["income"], rRIncome[1], s=5)
+axNumI[0, 1].scatter(rRIncome["income"], rRIncome[2], s=5)
+axNumI[1, 0].scatter(rRIncome["income"], rRIncome[3], s=5)
+axNumI[1, 1].scatter(rRIncome["income"], rRIncome[4], s=5)
 plt.show()
