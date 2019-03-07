@@ -70,7 +70,7 @@ yziNoOutlier.dropna()
 yziFiltNoOutlier = yziNoOutlier[["income", "zhvi", "avgPrice"]]
 
 yziFiltNoOutlier.to_csv('try.csv')
-print(yziFiltNoOutlier)
+
 
 
 ## Research Question 2
@@ -80,22 +80,9 @@ print(yziFiltNoOutlier)
 # Select Training and Testing Data
 # randomly select 4 indices for testing
 
-np.random.seed(235)  # set numpy random number generator seed
-# get four random idices
-testIndices = np.random.randint(0, high=yziFiltNoOutlier["income"].count(), size=4)
-trainIndices = set(np.arange(1,yziFiltNoOutlier["income"].count())+1) - set(testIndices)
+trainIncome = np.array([[val] for val in yziFiltNoOutlier["income"].dropna()])
+trainAvgPrice = np.array([[val] for val in yziFiltNoOutlier["avgPrice"].dropna()])
 
-# Select train and testing data
-testIncome = np.array([[val] for val in yziFiltNoOutlier["income"][testIndices].dropna()])
-testAvgPrice = np.array([[val] for val in yziFiltNoOutlier["avgPrice"][testIndices].dropna()])
-
-print(testIncome)
-print(testAvgPrice)
-trainIncome = np.array([[val] for val in yziFiltNoOutlier["income"][trainIndices].dropna()])
-trainAvgPrice = np.array([[val] for val in yziFiltNoOutlier["avgPrice"][trainIndices].dropna()])
-
-print(trainAvgPrice)
-print(trainIncome)
 # create a linear regression object
 regr = linear_model.LinearRegression()
 
@@ -103,24 +90,11 @@ regr = linear_model.LinearRegression()
 regr.fit(trainIncome, trainAvgPrice)
 
 # make predictions
-predictedAvgPrice = regr.predict(testIncome)
+predictedAvgPrice = regr.predict(trainIncome)
 
-# print the coeffs
-print("Coefficients: ", regr.coef_)
+rsquaredMetrics= pearsonr(predictedAvgPrice, trainAvgPrice)[0]**2
+print(rsquaredMetrics)
 
-print("score: ", regr.score(testIncome, testAvgPrice))
-
-
-# calculate R-squared
-print("R^2: ", pearsonr(testIncome, testAvgPrice)[0]**2)
-
-
-
-# plot outputs
-nl2 = plt.figure()
-plt.scatter(testIncome, testAvgPrice, color="black")
-plt.plot(testIncome, predictedAvgPrice, '.',color="blue")
-plt.show()
 
 # plot best fit line
 nl3 = plt.figure()

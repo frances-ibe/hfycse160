@@ -9,7 +9,8 @@ from pandas import DataFrame
 
 
 def readInData(fileName):
-    """ This function takes a csv filename and creates a dataframe """
+    """ This function takes a csv filename and creates a dataframe containing columns
+    for city, zhvi, and RegionName"""
     outputDF = pd.read_csv(fileName, usecols=["City","Zhvi","RegionName"], encoding='utf8')
     return outputDF
 
@@ -31,7 +32,7 @@ def usefulDict(zillowDF, targetCity):
 
 def dictToCSVDF(zillow_dict):
     """This function takes in the dictionary with data of interest and generates
-    a data frame with the in the dictionary"""
+    a data frame with from the keys and values in the dictionary"""
 
     d = {}  # creating a dictioary to create dataframe
     postCodes = []  # These two lists are the columns of dataframe
@@ -68,7 +69,7 @@ def zillPreProcess(fileNameIn, fileNameOut="vegasHousing", targetCity="Las Vegas
 def zipcodeList(fileNameIn="Zip_Zhvi_Summary_AllHomes.csv", targetCity="Las Vegas"):
     """This Function takes in the fileNameIn of the csv with the zillow data in it
     and the targetCity that is default set to Las Vegas and returns list of
-    postal codes from the las vegas city"""
+    postal codes from the las vegas city that is used when generating the IRS data"""
     zillowDF1 = readInData(fileNameIn)
     zillowDict1 = usefulDict(zillowDF1, targetCity)
     outputList = list(zillowDict1.keys())
