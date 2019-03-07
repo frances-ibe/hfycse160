@@ -38,17 +38,17 @@ yziFilt = yzi[["income", "zhvi", "avgPrice"]]
 corrDF = yziFilt.corr(method='pearson')
 print(corrDF)
 
-# # Plot Grid of Scatter Plots
-# fig1 = plt.figure()
-# # plt.subplot(3,1,1)
-# plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
-# # plt.subplot(3,1,2)
-# fig2 = plt.figure()
-# plt.plot(yzi["zhvi"], yzi["income"],'.')
-# # plt.subplot(3,1,3)
-# fig3 = plt.figure()
-# plt.plot(yzi["income"], yzi["avgPrice"],'.')
-# plt.show()
+# Plot Grid of Scatter Plots
+fig1 = plt.figure()
+#plt.subplot(3,1,1)
+plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
+#plt.subplot(3,1,2)
+fig2 = plt.figure()
+plt.plot(yzi["zhvi"], yzi["income"],'.')
+#plt.subplot(3,1,3)
+fig3 = plt.figure()
+plt.plot(yzi["income"], yzi["avgPrice"],'.')
+plt.show()
 
 #
 # # ## Research Question 3
@@ -56,6 +56,9 @@ print(corrDF)
 # # What are trends in such variance across zip code areas and how does it relate to
 # # socioeconomic factors such as median house value and average household income? """
 #
+
+
+
 avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
 numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
 
@@ -96,7 +99,7 @@ wRating.fillna(0)
 
 # Plotting avg rating yelp at different price points
 # vs Median household income
-AvgVsZhvi = plt.figure()
+avgRateVsZhvi = plt.figure()
 plt.subplot(4,1,1)
 plt.scatter(yzi["zhvi"], avgRatingByZipDF[1])
 plt.title('Price Point 1', fontname="Arial", fontsize=12)
@@ -123,9 +126,16 @@ plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
 plt.ylim((0,6))
 plt.show()
 
-avgRatingZhviDF = pd.merge(avgRatingByZipDF, yzi[["postalCode","zhvi"]], on="postalCode") # generating correlation matrix
-corrRatingZhviDF = avgRatingZhviDF.corr(method='pearson')
+avgRatingZhviDF = pd.merge(avgRatingByZipDF, yzi[["postalCode","zhvi"]], on="postalCode")
+corrRatingZhviDF = avgRatingZhviDF.corr(method='pearson') # generating correlation matrix
 print(corrRatingZhviDF) # printing correlation matrix
+
+# generating comparative boxplots for weighted average clustered by price point
+bxPlt_nw = plt.figure()
+bxPlt1 = avgRatingZhviDF.boxplot(column=[1,2,3,4])
+plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Price Point', fontname="Arial", fontsize=12)
+plt.show()
 
 # Plotting avg weighted rating yelp at different price points
 #vs Median household income
@@ -159,6 +169,13 @@ plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
 plt.ylim((0,3))
 plt.show()
 
-weightAvgZhvi = pd.merge(wRating, yzi[["postalCode","zhvi"]], on="postalCode") # generating correlation matrix
-corrWeightAvgZhvi = weightAvgZhvi.corr(method='pearson')
+
+weightAvgZhvi = pd.merge(wRating, yzi[["postalCode","zhvi"]], on="postalCode")
+corrWeightAvgZhvi = weightAvgZhvi.corr(method='pearson') # generating correlation matrix
 print(corrWeightAvgZhvi) # printing correlation matrix
+
+bxPlt_w = plt.figure()
+bxPlt2 = weightAvgZhvi.boxplot(column=[1,2,3,4])
+plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Price Point', fontname="Arial", fontsize=12)
+plt.show()
