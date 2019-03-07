@@ -94,36 +94,71 @@ wRating = pd.DataFrame(wRating)
 wRating.fillna(0)
 
 
-# Avg Rating yelp at different price points
+# Plotting avg rating yelp at different price points
 # vs Median household income
 AvgVsZhvi = plt.figure()
 plt.subplot(4,1,1)
-plt.plot(avgRatingByZipDF[1], yzi["zhvi"], '.')
+plt.scatter(yzi["zhvi"], avgRatingByZipDF[1])
+plt.title('Price Point 1', fontname="Arial", fontsize=12)
+plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,6))
 plt.subplot(4,1,2)
-plt.plot(avgRatingByZipDF[2], yzi["zhvi"], '.')
+plt.scatter(yzi["zhvi"], avgRatingByZipDF[2])
+plt.title('Price Point 2', fontname="Arial", fontsize=12)
+plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,6))
 plt.subplot(4,1,3)
-plt.plot(avgRatingByZipDF[3], yzi["zhvi"], '.')
+plt.scatter(yzi["zhvi"], avgRatingByZipDF[3])
+plt.title('Price Point 3', fontname="Arial", fontsize=12)
+plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,6))
 plt.subplot(4,1,4)
-plt.plot(avgRatingByZipDF[4], yzi["zhvi"], '.')
-#plt.show()
-
-avgRatingZhviDF = pd.merge(avgRatingByZipDF, yzi[["postalCode","zhvi"]], on="postalCode")
-#print(avgRatingZhviDF)
-corrRatingZhviDF = avgRatingZhviDF.corr(method='pearson')
-print(corrRatingZhviDF)
-
-weightedAvgVsZhvi = plt.figure()
-plt.subplot(4,1,1)
-plt.plot(wRating[1], yzi["zhvi"], '.')
-plt.subplot(4,1,2)
-plt.plot(wRating[2], yzi["zhvi"], '.')
-plt.subplot(4,1,3)
-plt.plot(wRating[3], yzi["zhvi"], '.')
-plt.subplot(4,1,4)
-plt.plot(wRating[4], yzi["zhvi"], '.')
+plt.scatter(yzi["zhvi"], avgRatingByZipDF[4])
+plt.title('Price Point 4', fontname="Arial", fontsize=12)
+plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,6))
 plt.show()
 
-weightAvgZhvi = pd.merge(wRating, yzi[["postalCode","zhvi"]], on="postalCode")
+avgRatingZhviDF = pd.merge(avgRatingByZipDF, yzi[["postalCode","zhvi"]], on="postalCode") # generating correlation matrix
+corrRatingZhviDF = avgRatingZhviDF.corr(method='pearson')
+print(corrRatingZhviDF) # printing correlation matrix
 
+# Plotting avg weighted rating yelp at different price points
+#vs Median household income
+# The weight is the ratio of the number of restaurants per
+#pricepoint per zipcode to the total number of resteraunts
+#per zipcodeList
+weightedAvgVsZhvi = plt.figure()
+plt.subplot(4,1,1)
+plt.scatter(yzi["zhvi"], wRating[1])
+plt.title('Price Point 1', fontname="Arial", fontsize=12)
+plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,3))
+plt.subplot(4,1,2)
+plt.scatter(yzi["zhvi"], wRating[2])
+plt.title('Price Point 1', fontname="Arial", fontsize=12)
+plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,3))
+plt.subplot(4,1,3)
+plt.scatter(yzi["zhvi"], wRating[3])
+plt.title('Price Point 3', fontname="Arial", fontsize=12)
+plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,3))
+plt.subplot(4,1,4)
+plt.scatter(yzi["zhvi"], wRating[4])
+plt.title('Price Point 4', fontname="Arial", fontsize=12)
+plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
+plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
+plt.ylim((0,3))
+plt.show()
+
+weightAvgZhvi = pd.merge(wRating, yzi[["postalCode","zhvi"]], on="postalCode") # generating correlation matrix
 corrWeightAvgZhvi = weightAvgZhvi.corr(method='pearson')
-print(corrWeightAvgZhvi)
+print(corrWeightAvgZhvi) # printing correlation matrix
