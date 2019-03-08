@@ -1,34 +1,54 @@
-# Nathaniel Linden
-# Parker Grosjean
-# Frances Ingram-Bate
-import preProcessIRS as ppi
-import preProcessZillow as ppz
+""" The following code performs ALL statistical testing for the completion of
+out CSE 160 final project. All supporting code and preprocessed data will be
+made available.
+
+Authors: Frances Ingram-Bate, Nathaniel Linden, Parker Grossjean
+
+Updated: March 7th 2019
+
+Abbreviations (We will use these throughout the script):
+-  zhvi - zillow homw value index
+-  avgPrice - average restuarant price
+-  yzi - yelp, zillow, IRS
+
+Note: This code is requrires the preprocessed data files, alongside the geoJSON
+file in the same directory in order to compile.
+"""
+
+# Imports:
+# python modules
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn import linear_model
+from sklearn.metrics import r2_score, mean_squared_error, explained_variance_score
+from scipy.stats import pearsonr
 
-# Loading Preprocessed Data
-# loading zillow data
-zillowData = pd.read_csv("vegasHousing.csv")
+# supporting scripts
+from spatialMapping import plot_spatialdata
+
+""" Load Data """
+zillowData = pd.read_csv("vegasHousing.csv")  # zillow data from preprocessed csv
 zillowData.sort_values(by=["postalCode"])
 
-# loading irs data
-irsData = pd.read_csv("vegasIRS.csv")
+irsData = pd.read_csv("vegasIRS.csv")  # IRS data from preprocessed csv
 irsData.sort_values(by=["postalCode"])
 
-# loading yelp data
-yelpData = pd.read_csv("vegasRest.csv")
+yelpData = pd.read_csv("vegasRest.csv") # yelp data from preprocessed csv
 yelpData.sort_values(by=["postalCode"])
 ### Note: the yelp data with city="Las Vegas" appears to have some mislabeled
 # data, some of the zip codes are in other cities such as 85705 in Tucson
 
+""" Compute average yelp rating """
 # average yelp rating
-d = []
+d = [] # empty list to store rating for each zip code
 for zip in irsData["postalCode"]:
+    # get all restaurants for a given zipcode
     zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
     zipPrice.astype(int)
+    # add the mean to the list
     d.append({"postalCode": zip, "avgPrice": np.mean(zipPrice)})
-yelpAvg = pd.DataFrame(d)
+yelpAvg = pd.DataFrame(d) # create a pandas data frame from this list
 
 # merge yelp and zillow data
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
@@ -40,19 +60,17 @@ yziNoOutlier = yzi[yzi["avgPrice"] != max(yzi["avgPrice"])]
 yziNoOutlier.dropna()
 
 
-#
-# # ## Research Question 1
-# # Does restaurant star rating across price point level vary for
-# # different zip code  areas? What are trends in such variance across
-# # zip code areas and how does it relate to socioeconomic factors
-# # such as median house value and average household income?
-#
 
+""" Research Question 1
+Does restaurant star rating across price point level vary for different zip code
+areas? What are trends in such variance across zip code areas and how does it
+relate to socioeconomic factors such as median house value and average household
+income?
+"""
 
 ## Compute Correlation Statistics Between household income and median home value
-# no outlier removed
-corrDF = yziFilt.corr(method='pearson')
-# print(corrDF)
+corrDF = yziFilt.corr(method='pearson')  # no outlier removed
+# print(corrDF)  # show correlation matrix
 
 
 ## Compute Correlation Statistics Between household income and median home value
@@ -102,13 +120,70 @@ axRq1[1,0].set_title('Outlier Removed', fontname="Arial", fontsize=12, fontweigh
 axRq1[1,1].set_title('Outlier Removed', fontname="Arial", fontsize=12, fontweight='bold')
 axRq1[1,2].set_title('Outlier Removed', fontname="Arial", fontsize=12, fontweight='bold')
 # plt.savefig('RQ1_scatters.png')
+## Research Question 2
+""" Can we predict average resurante pricing?"""
 
-#
-# # ## Research Question 3
-# # """ Does restaurant star rating across price point level vary for different zip code areas?
-# # What are trends in such variance across zip code areas and how does it relate to
-# # socioeconomic factors such as median house value and average household income? """
-#
+trainIncome = np.array([[val] for val in yziFiltNoOutlier["income"].dropna()])
+trainAvgPrice = np.array([[val] for val in yziFiltNoOutlier["avgPrice"].dropna()])
+trainZHVI = np.array([[val] for val in yziFiltNoOutlier["zhvi"].dropna()])
+
+## USE INCOME AS PREDICTOR  ##
+# create a linear regression object
+regr1 = linear_model.LinearRegression()
+# fit the model to the training data
+regr1.fit(trainIncome, trainAvgPrice)
+# make predictions
+predictedAvgPrice = regr1.predict(trainIncome)
+# evaluate goodness of fit
+rsquaredMetrics1 = pearsonr(predictedAvgPrice, trainAvgPrice)[0]**2
+print(rsquaredMetrics1)  # show statistic
+
+# plot best fit line versus original data
+nl3 = plt.figure()
+plt.scatter(trainIncome, trainAvgPrice, color="xkcd:black")
+predictline, = plt.plot(trainIncome, regr1.predict(trainIncome), color="xkcd:aquamarine", linewidth=2)
+plt.title('Linear Regression Based Prediciton of Average Restaurant Price by Average Income', \
+          fontsize=14, fontname='Arial', fontweight='bold')
+plt.xlabel('Income', fontsize=12, fontname='Arial', fontweight='bold')
+plt.ylabel('Average Restaurant Price', fontsize=12, fontname='Arial', fontweight='bold')
+labl = 'RSquared = ' + str(np.round(rsquaredMetrics1[0], 3))  # legend label string
+plt.legend(handles=[predictline], labels=[labl], loc=4)
+nl3.set_size_inches(11, 8)
+plt.savefig('regr1priceincome.png')
+
+## USE ZHVI AS PREDICTOR  ##
+# create a linear regression object
+regr2 = linear_model.LinearRegression()
+# fit the model to the training data
+regr2.fit(trainZHVI, trainAvgPrice)
+# make predictions
+predictedAvgPrice2 = regr2.predict(trainZHVI)
+# evaluate goodness of fit
+rsquaredMetrics2 = pearsonr(predictedAvgPrice, trainZHVI)[0]**2
+print(rsquaredMetrics2)  # show statistic
+
+
+# plot best fit line
+nl4 = plt.figure()
+plt.scatter(trainIncome, trainZHVI, color="xkcd:black")
+predictline, = plt.plot(trainZHVI, regr1.predict(trainZHVI), color="xkcd:aquamarine", linewidth=2)
+plt.title('Linear Regression Based Prediciton of Average Restaurant Price by Zillow Home Value Index', \
+          fontsize=14, fontname='Arial', fontweight='bold')
+plt.xlabel('Income', fontsize=12, fontname='Arial', fontweight='bold')
+plt.ylabel('Zillow Home Value Index', fontsize=12, fontname='Arial', fontweight='bold')
+labl = 'RSquared = ' + str(np.round(rsquaredMetrics1[0], 3))
+
+plt.legend(handles=[predictline], labels=[labl], loc=4)
+nl4.set_size_inches(11, 8)
+plt.savefig('regr2priceZHVI.png')
+
+
+
+""" Research Question 3
+Does restaurant star rating across price point level vary for different zip code areas?
+What are trends in such variance across zip code areas and how does it relate to
+socioeconomic factors such as median house value and average household income?
+"""
 
 ## Data preprocessing for RQ 3 analysis
 avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
@@ -282,3 +357,25 @@ plt.ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
 plt.xlabel('Price Point', fontname="Arial", fontsize=12, fontweight='bold')
 # plt.savefig('comp_boxplot_ppoint_avgrating.png')
 #plt.show()
+
+
+""" GEOGRAPHICAL visualizaiton """
+## MAKE MAPS ##
+# create dictionaries mapping zip codes to the number of restaurants in each zip
+# code region
+weightedZipsNumRest = {}
+weightedZipsIncome = {}
+weightedZipsPrice = {}
+
+for zip in irsData["postalCode"]:  # loop through all zip codes in data set
+    numRests = len(yelpData[yelpData["postalCode"] == zip]["price"])
+    weightedZipsNumRest[str(zip)] = np.log(numRests)
+    weightedZipsPrice[str(zip)] = np.max(yzi[yzi['postalCode'] == zip]['avgPrice'])
+    weightedZipsIncome[str(zip)] = np.max(yzi[yzi['postalCode'] == zip]['income'])
+
+
+# use spatialMapping to plot a choropleth map where colors correspond to number
+# of restaurant in that zipcode saved to the figure names specified.
+plot_spatialdata('numRest', weightedZipsNumRest, 'Number of Restaurants per Las Vegas Zip Code')
+plot_spatialdata('Price', weightedZipsIncome, 'Mean Household Income per Las Vegas Zip Code')
+plot_spatialdata('Income', weightedZipsPrice, 'Mean Restaurant Price per Las Vegas Zip Code')
