@@ -119,9 +119,10 @@ axRq1[1,1].set_xlim(((25000,225000)))
 axRq1[1,0].set_title('Outlier Removed', fontname="Arial", fontsize=12, fontweight='bold')
 axRq1[1,1].set_title('Outlier Removed', fontname="Arial", fontsize=12, fontweight='bold')
 axRq1[1,2].set_title('Outlier Removed', fontname="Arial", fontsize=12, fontweight='bold')
-# plt.savefig('RQ1_scatters.png')
+plt.savefig('RQ1_scatters.png')
 ## Research Question 2
-""" Can we predict average resurante pricing?"""
+### Research Question 2
+#Can we predict average restaurant pricing? ###
 
 trainIncome = np.array([[val] for val in yziFiltNoOutlier["income"].dropna()])
 trainAvgPrice = np.array([[val] for val in yziFiltNoOutlier["avgPrice"].dropna()])
@@ -254,7 +255,7 @@ axAvgI[0,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweig
 axAvgI[1,0].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
 axAvgI[1,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
 axAvgI[1,1].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
-# plt.savefig('scatter_income_avgrating_by_ppoint.png')
+plt.savefig('scatter_income_avgrating_by_ppoint.png')
 
 
 # Plotting restaurant proportion at different price points
@@ -282,7 +283,7 @@ axRestI[0,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, 
 axRestI[1,0].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
 axRestI[1,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
 axRestI[1,1].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
-# plt.savefig('scatter_income_proprest_by_ppoint.png')
+plt.savefig('scatter_income_proprest_by_ppoint.png')
 
 
 # Calculating Correlation
@@ -319,7 +320,7 @@ axAvgZ[0,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweig
 axAvgZ[1,0].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
 axAvgZ[1,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
 axAvgZ[1,1].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
-# plt.savefig('scatter_zhvi_avgrating_by_ppoint.png')
+plt.savefig('scatter_zhvi_avgrating_by_ppoint.png')
 
 # Plotting restaurant proportion at different price points
 # vs Median household income
@@ -346,20 +347,348 @@ axRestZ[0,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, 
 axRestZ[1,0].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
 axRestZ[1,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
 axRestZ[1,1].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
-# plt.savefig('scatter_zhvi_proprest_by_ppoint.png')
+plt.savefig('scatter_zhvi_proprest_by_ppoint.png')
 
 
-# generating comparative boxplots for average rating clustered by price point
+# generating comparative boxplot for average rating clustered by price point
 avgRatingZhviDF = pd.merge(avgRatingByZipDF, yzi[["postalCode","zhvi"]], on="postalCode")
-bxPlt_nw = plt.figure()
-bxPlt1 = avgRatingZhviDF.boxplot(column=[1,2,3,4])
+bxPltAvg = plt.figure()
+bxPlt1 = avgRatingZhviDF.boxplot(column=[1,2,3,4], grid=False)
+plt.ylim((0,5.0))
 plt.ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
 plt.xlabel('Price Point', fontname="Arial", fontsize=12, fontweight='bold')
-# plt.savefig('comp_boxplot_ppoint_avgrating.png')
+plt.savefig('comp_boxplot_ppoint_avgrating.png')
+
+# generating comparative boxplot for proportion of restaurants clustered
+# by price point per zipcode
+bxPltProp = plt.figure()
+bxPlt2 = rRZil.boxplot(column=[1,2,3,4], grid=False)
+plt.ylim((0,0.8))
+plt.ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
+plt.xlabel('Price Point', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('comp_boxplot_ppoint_proportion.png')
+
+
+
+### Chi Squared Tests ###
+
+## Calculate proption of restaurants within each price level for all zip codes
+
+# calculate number restaurants within each price level bin
+numRest1 = numRestByZipDF[1].sum()
+numRest2 = numRestByZipDF[2].sum()
+numRest3 = numRestByZipDF[3].sum()
+numRest4 = numRestByZipDF[4].sum()
+
+totalRest = numRest1 + numRest2 + numRest3 + numRest4
+
+# calculate proportions
+propRest1 = numRest1 / totalRest
+propRest2 = numRest2 / totalRest
+propRest3 = numRest3 / totalRest
+propRest4 = numRest4 / totalRest
+propRest = [propRest1, propRest2, propRest3, propRest4]
+
+assert(propRest1 + propRest2 + propRest3 + propRest4 == 1)
+
+## Proportion of all stars per price level
+
+# calculate number stars within each price level bin
+numStar1 = starsZip[1].sum()
+numStar2 = starsZip[2].sum()
+numStar3 = starsZip[3].sum()
+numStar4 = starsZip[4].sum()
+
+totalStar = numStar1 + numStar2 + numStar3 + numStar4
+
+# calculate proportions
+propStar1 = numStar1 / totalStar
+propStar2 = numStar2 / totalStar
+propStar3 = numStar3 / totalStar
+propStar4 = numStar4 / totalStar
+propStar = [propStar1, propStar2, propStar3, propStar4]
+
+assert(propStar1 + propStar2 + propStar3 + propStar4 == 1)
+
+def chiDict(zip, obs, exp,  alpha=0.01):
+    """Create dictionary containing zip code, number of stars per zip code,
+    number of restaurants per zip code, chi-squared value and p-value result
+    of chi-square test, as well as whether or not the p-value is less than alpha.
+    Calculates chi-square value from observed and expected lists"""
+    result = stats.chisquare(obs, exp)
+    return {"postalCode":zip, "chi-squared":result[0], "p-value":result[1],
+    "less than alpha":(result[1] < alpha)}
+
+
+zipList = irsData["postalCode"].tolist()
+
+### Compute Chi-Square For Basic Assumptions ###
+
+# number of restaurants total
+obsRest = [numRest1, numRest2, numRest3, numRest4]
+expRest = [np.mean(obsRest)] * 4
+pvalRest = stats.chisquare(obsRest, expRest)[1]
+
+# number of stars total
+obsStar = [numStar1, numStar2, numStar3, numStar4]
+expStar = [np.mean(obsStar)] * 4
+pvalStar = stats.chisquare(obsStar, expStar)[1]
+
+## Chi Square Tests
+
+# Restaurant Number and Price Level
+chiTotRest = [] #obs: rest per price level, exp: total rest prop
+chiZipRest = [] #obs: rest per price level, exp: mean number for zip
+
+# Number of Stars and Price Level
+chiTotStars = [] #obs: stars per price level, exp: total star prop
+chiZipStars = [] #obs: stars per price level, exp: mean number for zip
+
+# Restaurant Number and Number of Stars
+chiTotStarRest = [] #obs: stars per price level, exp: total rest prop
+
+for zip in zipList:
+
+    # Observed Values
+    restLevel = numRestByZipDF[numRestByZipDF["postalCode"]==zip].values.tolist()[0][1:5]
+    numRest = sum(restLevel)
+    restPropLevel = [x/numRest for x in restLevel]
+
+    starLevel = starsZip[starsZip["postalCode"]==zip].values.tolist()[0][1:5]
+    numStars = sum(starLevel)
+
+    # Expected Values
+    restTot = [numRest*x for x in propRest]
+    restZip = [np.mean(restLevel)] * 4
+
+    starTot = [numStars*x for x in propStar]
+    starZipNum = [np.mean(starLevel)] * 4
+    starAvgRest = [numStars*x for x in propRest]
+
+    # Compute Chi-Square Test and Append Results to List
+    chiTotRest.append(chiDict(zip,restLevel, restTot))
+    chiZipRest.append(chiDict(zip,restLevel, restZip))
+
+    chiTotStars.append(chiDict(zip,starLevel, starTot))
+    chiZipStars.append(chiDict(zip,starLevel, starZipNum))
+    chiTotStarRest.append(chiDict(zip,starLevel, starAvgRest))
+
+# Convert List of Dictionaries to DataFrame
+chiTotRest = pd.DataFrame(chiTotRest)
+chiZipRest = pd.DataFrame(chiZipRest)
+
+chiTotStars = pd.DataFrame(chiTotStars)
+chiZipStars = pd.DataFrame(chiZipStars)
+chiTotStarRest = pd.DataFrame(chiTotStarRest)
+
+# Print Data Frames
+# print(chiTotRest)
+# print(chiZipRest)
+
+# print(chiTotStars)
+# print(chiZipStars)
+# print(chiTotStarRest)
+
+### Filter Data for Zips for which
+# (1) number of restaurants per price level is independent of price level
+# (2) number of stars per price level is independent of price level
+# (3) number of stars per price level is independent of number of restaurants per price level
+
+zipTest = []
+for zip in zipList:
+    zipRest = chiZipRest[chiZipRest["postalCode"]==zip].iloc[0]["less than alpha"]
+    zipStars = chiZipStars[chiZipStars["postalCode"]==zip].iloc[0]["less than alpha"]
+    starRest = chiTotStarRest[chiTotStarRest["postalCode"]==zip].iloc[0]["less than alpha"]
+    zipTest.append({"postalCode": zip, "independent": (zipRest & zipStars & starRest)})
+zipTest = pd.DataFrame(zipTest)
+# print(zipTest)
+
+# generating data frame with the zipcodes that pass the tests of independence
+# from all three of the chi squared tests
+zipPassTests = zipTest[zipTest["independent"]].drop(columns=["independent"])
+
+
+
+### Research Question 3 analysis with the dependent zipcode values
+# found from the chi-squared tests removed. ###
+
+# removing the zipcodes that failed the test of independence
+aRIncomeInd = pd.merge(zipPassTests, aRIncome, on="postalCode")
+rRIncomeInd = pd.merge(zipPassTests, rRIncome, on="postalCode")
+
+# computing correlation matrices for the zipcodes that passed the ind test
+aRICorrInd = aRIncomeInd[[1, 2, 3, 4, "income"]].corr(method='pearson')
+# print(aRICorrInd)
+rRICorrInd = rRIncomeInd[[1, 2, 3, 4, "income"]].corr(method='pearson')
+# print(rRICorrInd)
+
+# removing the zipcodes that failed the test of independence
+aRZilInd = pd.merge(zipPassTests, aRZil, on="postalCode")
+rRZilInd = pd.merge(zipPassTests, rRZil, on="postalCode")
+
+# computing correlation matrices for the zipcodes that passed the ind test
+aRZCorrInd = aRZilInd[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
+# print(aRZCorrInd)
+rRZCorrInd = rRZilInd[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
+# print(rRZCorrInd)
+
+## Plotting avg rating yelp at different price points
+# vs average income for zip codes that passed tests of ind
+figAvgIInd, axAvgIInd = plt.subplots(2, 2, sharex='col', sharey='row')
+figAvgIInd.set_size_inches(8, 5)
+plt.subplots_adjust(hspace=0.2, wspace=0.2)
+axAvgIInd[0, 0].scatter(aRIncomeInd["income"], aRIncomeInd[1], s=10)
+axAvgIInd[0, 1].scatter(aRIncomeInd["income"], aRIncomeInd[2], s=10)
+axAvgIInd[1, 0].scatter(aRIncomeInd["income"], aRIncomeInd[3], s=10)
+axAvgIInd[1, 1].scatter(aRIncomeInd["income"], aRIncomeInd[4], s=10)
+axAvgIInd[0,0].set_ylim((0,5))
+axAvgIInd[1,0].set_ylim((0,5))
+axAvgIInd[0,1].set_ylim((0,5))
+axAvgIInd[1,1].set_ylim((0,5))
+axAvgIInd[0,0].set_xlim((25000,225000))
+axAvgIInd[0,1].set_xlim((25000,225000))
+axAvgIInd[1,0].set_xlim((25000,225000))
+axAvgIInd[1,1].set_xlim((25000,225000))
+axAvgIInd[0,0].set_title('Price Point 1', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[0,1].set_title('Price Point 2', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[1,0].set_title('Price Point 3', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[1,1].set_title('Price Point 4', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[0,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[1,0].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[1,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgIInd[1,1].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('scatter_income_avgrating_by_ppoint_Ind.png')
+
+
+# Plotting restaurant proportion at different price points
+# vs average income for zip codes that passed tests of ind
+figRestIInd, axRestIInd = plt.subplots(2, 2, sharex='col', sharey='row')
+figRestIInd.set_size_inches(8, 5)
+plt.subplots_adjust(hspace=0.2, wspace=0.2)
+axRestIInd[0, 0].scatter(rRIncomeInd["income"], rRIncomeInd[1], s=10)
+axRestIInd[0, 1].scatter(rRIncomeInd["income"], rRIncomeInd[2], s=10)
+axRestIInd[1, 0].scatter(rRIncomeInd["income"], rRIncomeInd[3], s=10)
+axRestIInd[1, 1].scatter(rRIncomeInd["income"], rRIncomeInd[4], s=10)
+axRestIInd[0,0].set_ylim((0,0.8))
+axRestIInd[0,1].set_ylim((0,0.8))
+axRestIInd[1,0].set_ylim((0,0.8))
+axRestIInd[1,1].set_ylim((0,0.8))
+axRestIInd[0,0].set_xlim((25000,225000))
+axRestIInd[0,1].set_xlim((25000,225000))
+axRestIInd[1,0].set_xlim((25000,225000))
+axRestIInd[1,1].set_xlim((25000,225000))
+axRestIInd[0,0].set_title('Price Point 1', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[0,1].set_title('Price Point 2', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[1,0].set_title('Price Point 3', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[1,1].set_title('Price Point 4', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[0,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[1,0].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[1,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
+axRestIInd[1,1].set_xlabel('Mean Income', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('scatter_income_proprest_by_ppoint_Ind.png')
+
+
+# Plotting avg rating yelp at different price points
+# vs Median household value for zip codes that passed tests of ind
+figAvgZInd, axAvgZInd = plt.subplots(2,2, sharex='col', sharey='row')
+figAvgZInd.set_size_inches(8, 5)
+plt.subplots_adjust(hspace=0.2, wspace=0.2)
+axAvgZInd[0, 0].scatter(aRZilInd["zhvi"], aRZilInd[1], s=10)
+axAvgZInd[0, 1].scatter(aRZilInd["zhvi"], aRZilInd[2], s=10)
+axAvgZInd[1, 0].scatter(aRZilInd["zhvi"], aRZilInd[3], s=10)
+axAvgZInd[1, 1].scatter(aRZilInd["zhvi"], aRZilInd[4], s=10)
+axAvgZInd[0,0].set_ylim((0,5))
+axAvgZInd[1,0].set_ylim((0,5))
+axAvgZInd[0,1].set_ylim((0,5))
+axAvgZInd[1,1].set_ylim((0,5))
+axAvgZInd[0,0].set_xlim((150000,500000))
+axAvgZInd[0,1].set_xlim((150000,500000))
+axAvgZInd[1,0].set_xlim((150000,500000))
+axAvgZInd[1,1].set_xlim((150000,500000))
+axAvgZInd[0,0].set_title('Price Point 1', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[0,1].set_title('Price Point 2', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[1,0].set_title('Price Point 3', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[1,1].set_title('Price Point 4', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[0,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[1,0].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[1,0].set_ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
+axAvgZInd[1,1].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('scatter_zhvi_avgrating_by_ppoint_Ind.png')
+
+# Plotting restaurant proportion at different price points
+# vs Median household value for zip codes that passed tests of ind
+figRestZInd, axRestZInd = plt.subplots(2, 2, sharex='col', sharey='row')
+figRestZInd.set_size_inches(8, 5)
+plt.subplots_adjust(hspace=0.2, wspace=0.2)
+axRestZInd[0, 0].scatter(rRZilInd["zhvi"], rRZilInd[1], s=10)
+axRestZInd[0, 1].scatter(rRZilInd["zhvi"], rRZilInd[2], s=10)
+axRestZInd[1, 0].scatter(rRZilInd["zhvi"], rRZilInd[3], s=10)
+axRestZInd[1, 1].scatter(rRZilInd["zhvi"], rRZilInd[4], s=10)
+axRestZInd[0,0].set_ylim((0,0.8))
+axRestZInd[0,1].set_ylim((0,0.8))
+axRestZInd[1,0].set_ylim((0,0.8))
+axRestZInd[1,1].set_ylim((0,0.8))
+axRestZInd[0,0].set_xlim((150000,500000))
+axRestZInd[0,1].set_xlim((150000,500000))
+axRestZInd[1,0].set_xlim((150000,500000))
+axRestZInd[1,1].set_xlim((150000,500000))
+axRestZInd[0,0].set_title('Price Point 1', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[0,1].set_title('Price Point 2', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[1,0].set_title('Price Point 3', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[1,1].set_title('Price Point 4', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[0,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[1,0].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[1,0].set_ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
+axRestZInd[1,1].set_xlabel('zhvi', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('scatter_zhvi_proprest_by_ppoint_Ind.png')
+
+
+# generating comparative boxplot for average rating clustered by price point
+bxPltAvg = plt.figure()
+bxPlt1 = aRZilInd.boxplot(column=[1,2,3,4], grid=False)
+plt.ylim((0,5.0))
+plt.ylabel('Average Rating', fontname="Arial", fontsize=12, fontweight='bold')
+plt.xlabel('Price Point', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('comp_boxplot_ppoint_avgrating_Ind.png')
+
+# generating comparative boxplot for proportion of restaurants clustered
+# by price point per zipcode
+bxPltProp = plt.figure()
+bxPlt2 = rRZilInd.boxplot(column=[1,2,3,4], grid=False)
+plt.ylim((0,0.8))
+plt.ylabel('Restaurant Proportion', fontname="Arial", fontsize=12, fontweight='bold')
+plt.xlabel('Price Point', fontname="Arial", fontsize=12, fontweight='bold')
+plt.savefig('comp_boxplot_ppoint_proportion_Ind.png')
 #plt.show()
 
+### Research Question 3 without zip codes that failed independence tests
+# and the Las Vegas strip outlier ###
+# removing Las Vegas String Outlier
+zipPassTests2 = zipPassTests[zipPassTests["postalCode"] != 89109]
 
-""" GEOGRAPHICAL visualizaiton """
+# removing the zipcodes that failed the test of independence
+aRIncomeInd2 = pd.merge(zipPassTests, aRIncome, on="postalCode")
+rRIncomeInd2 = pd.merge(zipPassTests, rRIncome, on="postalCode")
+
+# computing correlation matrices for the zipcodes that passed the ind test
+# aRICorrInd2 = aRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
+print(aRICorrInd)
+rRICorrInd2 = rRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
+# print(rRICorrInd)
+
+# removing the zipcodes that failed the test of independence
+aRZilInd2 = pd.merge(zipPassTests, aRZil, on="postalCode")
+# rRZilInd2 = pd.merge(zipPassTests, rRZil, on="postalCode")
+
+# computing correlation matrices for the zipcodes that passed the ind test
+aRZCorrInd2 = aRZilInd2[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
+print(aRZCorrInd)
+rRZCorrInd2 = rRZilInd2[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
+# print(rRZCorrInd)
+
+
+
+### GEOGRAPHICAL visualizaiton ###
 ## MAKE MAPS ##
 # create dictionaries mapping zip codes to the number of restaurants in each zip
 # code region
