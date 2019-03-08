@@ -2,11 +2,14 @@
 # Script to USE goepandas to create a geographical visualizaiton
 import geopandas as gpd
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
 
 
 # funcitons
-def plot_spatialdata(file_name, zip_list_weighted, geo_data_file='nevadaGeoData.min.json', filter_para='ZCTA5CE10'):
+def plot_spatialdata(file_name, zip_list_weighted, plot_title, geo_data_file='nevadaGeoData.min.json', filter_para='ZCTA5CE10'):
     """ The following function creates a choropleth map for the geo_data stored
     in the geo_data_frame. If zip_list is specefied the data will be filtered by
     this list of attributes. If weights is unspecified all objects will have the
@@ -31,9 +34,23 @@ def plot_spatialdata(file_name, zip_list_weighted, geo_data_file='nevadaGeoData.
     filtered_df = geo_data_frame[geo_data_frame[filter_para].isin(filter_by)]
     # print(filtered_df[filter_para])
     param_df = pd.DataFrame.from_dict(zip_list_weighted, orient='index')
-    print(param_df)
+    fig, base = plt.subplots(1)
+    ax = filtered_df.plot(ax=base, column=param_df[0], cmap='Oranges', edgecolor='black')
+    plt.plot(-115.1728, 36.1147, 'b', markersize=10)
+    ax.set_axis_off()
 
-    filtered_df.plot(column=param_df[0], edgecolor='black')
-    plt.show()
-zippped = {'89108':[22750], '89121':[228200],'89123':[300100],'89110':[218000]}
-plot_spatialdata('moo.jpg',zippped)
+    label = [str(elm) for elm in np.linspace(min(list(zip_list_weighted.values())), max(list(zip_list_weighted.values())), num=7)]
+
+    bins = np.arange(min(list(zip_list_weighted.values())), max(list(zip_list_weighted.values())), 23106)
+
+    ax_legend = fig.add_axes([0.35, 0.06, 0.5, 0.03], zorder=3)
+    cb = mpl.colorbar.ColorbarBase(ax_legend, cmap='Oranges', ticks=bins, orientation='horizontal')
+    cb.ax.set_xticklabels([str(round(i, 1)) for i in bins], color='black')
+
+
+
+    base.set_title(plot_title)
+    fig.set_size_inches(8,8)
+    plt.savefig(file_name + '.png')
+# zippped = {'89108':[22750], '89121':[228200],'89123':[300100],'89110':[218000]}
+# plot_spatialdata('moo.jpg',zippped)
