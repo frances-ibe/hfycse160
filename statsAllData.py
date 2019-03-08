@@ -139,7 +139,7 @@ regr1.fit(trainIncome, trainAvgPrice)
 # make predictions
 predictedAvgPrice = regr1.predict(trainIncome)
 # evaluate goodness of fit
-rsquaredMetrics1 = pearsonr(predictedAvgPrice, trainAvgPrice)[0]**2
+rsquaredMetrics1 = pearsonr(trainIncome, trainAvgPrice)[0]**2
 print(rsquaredMetrics1)  # show statistic
 
 # plot best fit line versus original data
@@ -163,19 +163,19 @@ regr2.fit(trainZHVI, trainAvgPrice)
 # make predictions
 predictedAvgPrice2 = regr2.predict(trainZHVI)
 # evaluate goodness of fit
-rsquaredMetrics2 = pearsonr(predictedAvgPrice, trainZHVI)[0]**2
+rsquaredMetrics2 = pearsonr(trainZHVI, trainAvgPrice)[0]**2
 print(rsquaredMetrics2)  # show statistic
 
 
 # plot best fit line
 nl4 = plt.figure()
-plt.scatter(trainIncome, trainZHVI, color="xkcd:black")
-predictline, = plt.plot(trainZHVI, regr1.predict(trainZHVI), color="xkcd:aquamarine", linewidth=2)
+plt.scatter(trainZHVI, trainAvgPrice, color="xkcd:black")
+predictline, = plt.plot(trainZHVI, predictedAvgPrice2, color="xkcd:aquamarine", linewidth=2)
 plt.title('Linear Regression Based Prediciton of Average Restaurant Price by Zillow Home Value Index', \
           fontsize=14, fontname='Arial', fontweight='bold')
 plt.xlabel('Income', fontsize=12, fontname='Arial', fontweight='bold')
 plt.ylabel('Zillow Home Value Index', fontsize=12, fontname='Arial', fontweight='bold')
-labl = 'RSquared = ' + str(np.round(rsquaredMetrics1[0], 3))
+labl = 'RSquared = ' + str(np.round(rsquaredMetrics2[0], 3))
 
 plt.legend(handles=[predictline], labels=[labl], loc=4)
 nl4.set_size_inches(11, 8)
