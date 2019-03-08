@@ -120,7 +120,7 @@ propStar = [propStar1, propStar2, propStar3, propStar4]
 
 assert(propStar1 + propStar2 + propStar3 + propStar4 == 1)
 
-def chiDict(zip, obs, exp,  alpha=0.05):
+def chiDict(zip, obs, exp,  alpha=0.01):
     """Create dictionary containing zip code, number of stars per zip code,
     number of restaurants per zip code, chi-squared value and p-value result
     of chi-square test, as well as whether or not the p-value is less than alpha.
@@ -135,22 +135,15 @@ zipList = irsData["postalCode"].tolist()
 ### Chi Square Tests ###
 
 # Restaurant Number and Price Level
-chiAvgRest = [] #obs: rest per price level, exp: total rest prop
-chiAvg100Rest = [] #same as chiAvgRest, percentages rather than rest numbers
-
+chiTotRest = [] #obs: rest per price level, exp: total rest prop
 chiZipRest = [] #obs: rest per price level, exp: mean number for zip
-chiZip100Rest = [] #same as chiZipRest, percentages rather than number
 
 # Number of Stars and Price Level
-chiAvgStars = [] #obs: stars per price level, exp: total star prop
-chiAvg100Stars = [] #same as chiAvgStars, percentages rather than number of stars
-
+chiTotStars = [] #obs: stars per price level, exp: total star prop
 chiZipStars = [] #obs: stars per price level, exp: mean number for zip
-chiZip100Stars = [] #same as chiZipStars, percentages rather than number of stars
 
 # Restaurant Number and Number of Stars
-chiAvgStarRest = [] #obs: stars per price level, exp: total rest prop
-chiZipStarRest = [] #obs: stars per price level, exp: rest prop for zip
+chiTotStarRest = [] #obs: stars per price level, exp: total rest prop
 
 for zip in zipList:
 
@@ -163,33 +156,50 @@ for zip in zipList:
     numStars = sum(starLevel)
 
     # Expected Values
-    restAvgNum = [numRest*x for x in propRest]
-    restZipNum = [np.mean(restLevel)] * 4
+    restTot = [numRest*x for x in propRest]
+    restZip = [np.mean(restLevel)] * 4
 
-    starAvgNum = [numStars*x for x in propStar]
+    starTot = [numStars*x for x in propStar]
     starZipNum = [np.mean(starLevel)] * 4
     starAvgRest = [numStars*x for x in propRest]
 
     # Compute Chi-Square Test and Append Results to List
-    chiAvgRest.append(chiDict(zip,restLevel, restAvgNum))
-    chiZipRest.append(chiDict(zip,restLevel, restZipNum))
+    chiTotRest.append(chiDict(zip,restLevel, restTot))
+    chiZipRest.append(chiDict(zip,restLevel, restZip))
 
-    chiAvgStars.append(chiDict(zip,starLevel, starAvgNum))
+    chiTotStars.append(chiDict(zip,starLevel, starTot))
     chiZipStars.append(chiDict(zip,starLevel, starZipNum))
-    chiAvgStarRest.append(chiDict(zip,starLevel, starAvgRest))
+    chiTotStarRest.append(chiDict(zip,starLevel, starAvgRest))
 
 # Convert List of Dictionaries to DataFrame
-chiAvgRest = pd.DataFrame(chiAvgRest)
+chiTotRest = pd.DataFrame(chiTotRest)
 chiZipRest = pd.DataFrame(chiZipRest)
 
-chiAvgStars = pd.DataFrame(chiAvgStars)
+chiTotStars = pd.DataFrame(chiTotStars)
 chiZipStars = pd.DataFrame(chiZipStars)
-chiAvgStarRest = pd.DataFrame(chiAvgStarRest)
+chiTotStarRest = pd.DataFrame(chiTotStarRest)
 
 # Print Data Frames
-# print(chiAvgRest)
+# print(chiTotRest)
 # print(chiZipRest)
 
-# print(chiAvgStars)
+# print(chiTotStars)
 # print(chiZipStars)
-# print(chiAvgStarRest)
+# print(chiTotStarRest)
+
+### Filter Data for Zips for which
+# (1) number of restaurants per price level is independent of price level
+# (2) number of stars per price level is independent of price level
+# (3) number of stars per price level is independent of number of restaurants per price level
+
+zipTest = []
+for zip in zipList:
+    zipRest = chiZipRest[chiZipRest["postalCode"]==zip].iloc[0]["less than alpha"]
+    zipStars = chiZipStars[chiZipStars["postalCode"]==zip].iloc[0]["less than alpha"]
+    starRest = chiTotStarRest[chiTotStarRest["postalCode"]==zip].iloc[0]["less than alpha"]
+    zipTest.append({"postalCode": zip, "independent": (zipRest & zipStars & starRest)})
+zipTest = pd.DataFrame(zipTest)
+# print(zipTest)
+
+zipFailTests = zipTest[zipTest["independent"]==False].iloc[:]["postalCode"].values.tolist()
+print(zipFailTests)
