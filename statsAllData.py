@@ -2,7 +2,7 @@
 out CSE 160 final project. All supporting code and preprocessed data will be
 made available.
 
-Authors: Frances Ingram-Bate, Nathaniel Linden, Parker Grossjean
+Authors: Frances Ingram-Bate, Parker Grosjean, Nathaniel Linden
 
 Updated: March 7th 2019
 
