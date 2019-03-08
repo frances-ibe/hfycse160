@@ -437,12 +437,12 @@ zipList = irsData["postalCode"].tolist()
 
 # number of restaurants total
 obsRest = [numRest1, numRest2, numRest3, numRest4]
-expRest = [np.mean(obsRest)] * 4
+expRest = [0.25*totalRest] * 4
 pvalRest = stats.chisquare(obsRest, expRest)[1]
 
 # number of stars total
 obsStar = [numStar1, numStar2, numStar3, numStar4]
-expStar = [np.mean(obsStar)] * 4
+expStar = [0.25*totalStar] * 4
 pvalStar = stats.chisquare(obsStar, expStar)[1]
 
 # number of stars by restaurant proportion
@@ -475,10 +475,10 @@ for zip in zipList:
 
     # Expected Values
     restTot = [numRest*x for x in propRest]
-    restZip = [np.mean(restLevel)] * 4
+    restZip = [numRest*0.25] * 4
 
     starTot = [numStars*x for x in propStar]
-    starZipNum = [np.mean(starLevel)] * 4
+    starZip = [numStars*0.25] * 4
     starAvgRest = [numStars*x for x in propRest]
 
     # Compute Chi-Square Test and Append Results to List
@@ -486,7 +486,7 @@ for zip in zipList:
     chiZipRest.append(chiDict(zip,restLevel, restZip))
 
     chiTotStars.append(chiDict(zip,starLevel, starTot))
-    chiZipStars.append(chiDict(zip,starLevel, starZipNum))
+    chiZipStars.append(chiDict(zip,starLevel, starZip))
     chiTotStarRest.append(chiDict(zip,starLevel, starAvgRest))
 
 # Convert List of Dictionaries to DataFrame
