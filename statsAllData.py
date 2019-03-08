@@ -23,6 +23,7 @@ import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import r2_score, mean_squared_error, explained_variance_score
 from scipy.stats import pearsonr
+from scipy import stats
 
 # supporting scripts
 from spatialMapping import plot_spatialdata
@@ -45,10 +46,11 @@ d = [] # empty list to store rating for each zip code
 for zip in irsData["postalCode"]:
     # get all restaurants for a given zipcode
     zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
-    zipPrice.astype(int)
+    zipPrice = [int(val) for val in zipPrice.tolist() if val != 'None']
     # add the mean to the list
     d.append({"postalCode": zip, "avgPrice": np.mean(zipPrice)})
 yelpAvg = pd.DataFrame(d) # create a pandas data frame from this list
+print(yelpAvg)
 
 # merge yelp and zillow data
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
@@ -59,6 +61,7 @@ yziFilt = yzi[["income", "zhvi", "avgPrice"]]
 yziNoOutlier = yzi[yzi["avgPrice"] != max(yzi["avgPrice"])]
 yziNoOutlier.dropna()
 
+yziFiltNoOutlier = yziNoOutlier[["income", "zhvi", "avgPrice"]]
 
 
 """ Research Question 1
@@ -189,23 +192,30 @@ socioeconomic factors such as median house value and average household income?
 ## Data preprocessing for RQ 3 analysis
 avgRatingByZip = []  # empty list to hold dictionaries of avg rating per price pnt for each zip code
 numRestByZip = []  # empty list to hold dictionaries of num rest per price pnt for each zip code
+numStars = [] # empty list to hold dictionaries of num stars per price point for each zip code
 
 for zip in irsData["postalCode"]:  # loop through zip codes
     rests = yelpData[yelpData["postalCode"] == zip]  # get all rows such that the zip code is zip
     # temp dictionaries
     tempDictAvgs = {"postalCode":zip}
     tempDictCnts = {"postalCode":zip}
+    tempDictStars = {"postalCode":zip}
 
-    for priceLevel in [1, 2, 3, 4]:  # loop through possible price points
+    for priceLevel in ['1', '2', '3', '4']:  # loop through possible price points
         restsPPnt = rests[rests["price"] == priceLevel]["stars"]  # filter by price level
-        tempDictAvgs[priceLevel] = np.mean(np.array(restsPPnt))
-        tempDictCnts[priceLevel] = len(restsPPnt)
+
+        tempDictAvgs[int(priceLevel)] = np.mean(np.array(restsPPnt))
+        tempDictCnts[int(priceLevel)] = len(restsPPnt)
+        tempDictStars[int(priceLevel)] = np.sum(np.array(restsPPnt))
 
     avgRatingByZip.append(tempDictAvgs)
     numRestByZip.append(tempDictCnts)
+    numStars.append(tempDictStars)
+
 
 avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
 numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
+starsZip = pd.DataFrame(numStars)
 
 
 restRatio = []
@@ -213,6 +223,7 @@ for zip in irsData["postalCode"]:
     priceLevel = [1, 2, 3, 4]
     numData = numRestByZipDF[numRestByZipDF["postalCode"]==zip].values.tolist()[0][1:5]
     numRest = sum(numData)
+    print(numRest)
     ratios = [x/numRest for x in numData]
     restRatio.append({"postalCode": zip, 1: ratios[0], 2: ratios[1],
                 3: ratios[2], 4: ratios[3]})
@@ -676,14 +687,14 @@ aRIncomeInd2 = pd.merge(zipPassTests, aRIncome, on="postalCode")
 rRIncomeInd2 = pd.merge(zipPassTests, rRIncome, on="postalCode")
 
 # computing correlation matrices for the zipcodes that passed the ind test
-# aRICorrInd2 = aRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
+aRICorrInd2 = aRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
 print(aRICorrInd)
 rRICorrInd2 = rRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
 # print(rRICorrInd)
 
 # removing the zipcodes that failed the test of independence
 aRZilInd2 = pd.merge(zipPassTests, aRZil, on="postalCode")
-# rRZilInd2 = pd.merge(zipPassTests, rRZil, on="postalCode")
+rRZilInd2 = pd.merge(zipPassTests, rRZil, on="postalCode")
 
 # computing correlation matrices for the zipcodes that passed the ind test
 aRZCorrInd2 = aRZilInd2[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
