@@ -120,14 +120,14 @@ propStar = [propStar1, propStar2, propStar3, propStar4]
 
 assert(propStar1 + propStar2 + propStar3 + propStar4 == 1)
 
-def chiDict(zip, numRest, numStars, obs, exp,  alpha=0.05):
+def chiDict(zip, obs, exp,  alpha=0.05):
     """Create dictionary containing zip code, number of stars per zip code,
     number of restaurants per zip code, chi-squared value and p-value result
     of chi-square test, as well as whether or not the p-value is less than alpha.
     Calculates chi-square value from observed and expected lists"""
     result = stats.chisquare(obs, exp)
-    return {"postalCode":zip, "total stars":numStars, "total restaurants":numRest,
-    "chi-squared":result[0], "p-value":result[1], "less than alpha":(result[1] < alpha)}
+    return {"postalCode":zip, "chi-squared":result[0], "p-value":result[1],
+    "less than alpha":(result[1] < alpha)}
 
 
 zipList = irsData["postalCode"].tolist()
@@ -157,72 +157,39 @@ for zip in zipList:
     # Observed Values
     restLevel = numRestByZipDF[numRestByZipDF["postalCode"]==zip].values.tolist()[0][1:5]
     numRest = sum(restLevel)
-    restPropLevel = [100*x/numRest for x in restLevel]
+    restPropLevel = [x/numRest for x in restLevel]
 
     starLevel = starsZip[starsZip["postalCode"]==zip].values.tolist()[0][1:5]
     numStars = sum(starLevel)
-    starPropLevel = [100*x/numStars for x in starLevel]
 
     # Expected Values
     restAvgNum = [numRest*x for x in propRest]
-    restAvgProp = [100*x for x in propRest]
-
     restZipNum = [np.mean(restLevel)] * 4
-    restZipProp = [25] * 4
 
     starAvgNum = [numStars*x for x in propStar]
-    starAvgProp = [100*x for x in propStar]
-
     starZipNum = [np.mean(starLevel)] * 4
-    starZipProp = [25] * 4
-
     starAvgRest = [numStars*x for x in propRest]
-    starZipRest = [numStars*x/100 for x in restPropLevel]
 
     # Compute Chi-Square Test and Append Results to List
-    chiAvgRest.append(chiDict(zip, numRest, numStars, restLevel, restAvgNum))
-    chiAvg100Rest.append(chiDict(zip, numRest, numStars, restPropLevel, restAvgProp))
+    chiAvgRest.append(chiDict(zip,restLevel, restAvgNum))
+    chiZipRest.append(chiDict(zip,restLevel, restZipNum))
 
-    chiZipRest.append(chiDict(zip, numRest, numStars, restLevel, restZipNum))
-    chiZip100Rest.append(chiDict(zip, numRest, numStars, restPropLevel, restZipProp))
-
-    chiAvgStars.append(chiDict(zip, numRest, numStars, starLevel, starAvgNum))
-    chiAvg100Stars.append(chiDict(zip, numRest, numStars, starPropLevel, starAvgProp))
-
-    chiZipStars.append(chiDict(zip, numRest, numStars, starLevel, starZipNum))
-    chiZip100Stars.append(chiDict(zip, numRest, numStars, starPropLevel, starZipProp))
-
-    chiAvgStarRest.append(chiDict(zip, numRest, numStars, starLevel, starAvgRest))
-    chiZipStarRest.append(chiDict(zip, numRest, numStars, starLevel, starZipRest))
+    chiAvgStars.append(chiDict(zip,starLevel, starAvgNum))
+    chiZipStars.append(chiDict(zip,starLevel, starZipNum))
+    chiAvgStarRest.append(chiDict(zip,starLevel, starAvgRest))
 
 # Convert List of Dictionaries to DataFrame
 chiAvgRest = pd.DataFrame(chiAvgRest)
-chiAvg100Rest = pd.DataFrame(chiAvg100Rest)
-
 chiZipRest = pd.DataFrame(chiZipRest)
-chiZip100Rest = pd.DataFrame(chiZip100Rest)
 
 chiAvgStars = pd.DataFrame(chiAvgStars)
-chiAvg100Stars = pd.DataFrame(chiAvg100Stars)
-
 chiZipStars = pd.DataFrame(chiZipStars)
-chiZip100Stars = pd.DataFrame(chiZip100Stars)
-
 chiAvgStarRest = pd.DataFrame(chiAvgStarRest)
-chiZipStarRest = pd.DataFrame(chiZipStarRest)
 
 # Print Data Frames
 # print(chiAvgRest)
-# print(chiAvg100Rest)
-
 # print(chiZipRest)
-# print(chiZip100Rest)
 
 # print(chiAvgStars)
-# print(chiAvg100Stars)
-
 # print(chiZipStars)
-# print(chiZip100Stars)
-
 # print(chiAvgStarRest)
-# print(chiZipStarRest)
