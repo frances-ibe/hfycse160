@@ -79,28 +79,11 @@ for zip in irsData["postalCode"]:  # loop through zip codes
 avgRatingByZipDF = pd.DataFrame(avgRatingByZip)  # create dataframe
 numRestByZipDF = pd.DataFrame(numRestByZip)  # create dataframe
 
-restRatio = []
-wRating = []
-for zip in irsData["postalCode"]:
-    priceLevel = [1, 2, 3, 4]
-    numData = numRestByZipDF[numRestByZipDF["postalCode"]==zip].values.tolist()[0][1:5]
-    ratingData = avgRatingByZipDF[avgRatingByZipDF["postalCode"]==zip].values.tolist()[0][1:5]
-    numRest = sum(numData)
-    ratios = [x/numRest for x in numData]
-    restRatio.append({"postalCode": zip, 1: ratios[0], 2: ratios[1],
-                3: ratios[2], 4: ratios[3]})
-    wRating.append({"postalCode": zip, 1: ratingData[0]*ratios[0],
-                2: ratingData[1]*ratios[1], 3: ratingData[2]*ratios[2],
-                4: ratingData[3]*ratios[3]})
-restRatio = pd.DataFrame(restRatio)
-wRating = pd.DataFrame(wRating)
-wRating.fillna(0)
-
 
 # Plotting avg rating yelp at different price points
 # vs Median household income
 avgRateVsZhvi = plt.figure()
-plt.subplot(4,1,1)
+plt.subplots(2,2,1)
 plt.scatter(yzi["zhvi"], avgRatingByZipDF[1])
 plt.title('Price Point 1', fontname="Arial", fontsize=12)
 plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
@@ -132,50 +115,7 @@ print(corrRatingZhviDF) # printing correlation matrix
 
 # generating comparative boxplots for weighted average clustered by price point
 bxPlt_nw = plt.figure()
-bxPlt1 = avgRatingZhviDF.boxplot(column=[1,2,3,4])
+bxPlt1 = avgRatingZhviDF.boxplot(column=[1,2,3,4], grid=False)
 plt.ylabel('Average Rating', fontname="Arial", fontsize=12)
-plt.xlabel('Price Point', fontname="Arial", fontsize=12)
-plt.show()
-
-# Plotting avg weighted rating yelp at different price points
-#vs Median household income
-# The weight is the ratio of the number of restaurants per
-#pricepoint per zipcode to the total number of resteraunts
-#per zipcodeList
-weightedAvgVsZhvi = plt.figure()
-plt.subplot(4,1,1)
-plt.scatter(yzi["zhvi"], wRating[1])
-plt.title('Price Point 1', fontname="Arial", fontsize=12)
-plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
-plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
-plt.ylim((0,3))
-plt.subplot(4,1,2)
-plt.scatter(yzi["zhvi"], wRating[2])
-plt.title('Price Point 1', fontname="Arial", fontsize=12)
-plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
-plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
-plt.ylim((0,3))
-plt.subplot(4,1,3)
-plt.scatter(yzi["zhvi"], wRating[3])
-plt.title('Price Point 3', fontname="Arial", fontsize=12)
-plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
-plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
-plt.ylim((0,3))
-plt.subplot(4,1,4)
-plt.scatter(yzi["zhvi"], wRating[4])
-plt.title('Price Point 4', fontname="Arial", fontsize=12)
-plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
-plt.xlabel('Median Estimated Home Value (zhvi)', fontname="Arial", fontsize=12)
-plt.ylim((0,3))
-plt.show()
-
-
-weightAvgZhvi = pd.merge(wRating, yzi[["postalCode","zhvi"]], on="postalCode")
-corrWeightAvgZhvi = weightAvgZhvi.corr(method='pearson') # generating correlation matrix
-print(corrWeightAvgZhvi) # printing correlation matrix
-
-bxPlt_w = plt.figure()
-bxPlt2 = weightAvgZhvi.boxplot(column=[1,2,3,4])
-plt.ylabel('Weighted Average Rating', fontname="Arial", fontsize=12)
 plt.xlabel('Price Point', fontname="Arial", fontsize=12)
 plt.show()
