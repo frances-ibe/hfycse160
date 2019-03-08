@@ -1,7 +1,8 @@
 # Nathaniel Linden, Parker Grosjean, Frances Ingram-Bate
 # Feb 12th 2019
 # CSE 160
-""" The following code reads the zillow housing data from its original form to a new csv"""
+""" The following code reads the zillow housing data from its original
+form to a new csv with only the attributes of interest for our analysis."""
 
 # importing neccessary modules
 import pandas as pd
@@ -18,7 +19,8 @@ def readInData(fileName):
 def usefulDict(zillowDF, targetCity):
     """This function takes the zillow data frame created using
     the readInData function and returns a dictionary with postal
-    codes as keys and ZHVIs as values"""
+    codes as keys and ZHVIs as values filtered only for a specified
+    target city."""
     output_dict = {}  # creating dictionary
     if targetCity == None:
         for row in range(zillowDF.shape[0]):
