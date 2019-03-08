@@ -201,5 +201,4 @@ for zip in zipList:
 zipTest = pd.DataFrame(zipTest)
 # print(zipTest)
 
-zipFailTests = zipTest[zipTest["independent"]==False].iloc[:]["postalCode"].values.tolist()
-print(zipFailTests)
+zipPassTests = zipTest[zipTest["independent"]].drop(columns=["independent"])
