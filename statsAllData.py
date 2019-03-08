@@ -422,7 +422,7 @@ def chiDict(zip, obs, exp,  alpha=0.01):
 
 zipList = irsData["postalCode"].tolist()
 
-### Compute Chi-Square For Basic Assumptions ###
+### Compute Chi-Square For Total Data Assumptions ###
 
 # number of restaurants total
 obsRest = [numRest1, numRest2, numRest3, numRest4]
@@ -433,6 +433,11 @@ pvalRest = stats.chisquare(obsRest, expRest)[1]
 obsStar = [numStar1, numStar2, numStar3, numStar4]
 expStar = [np.mean(obsStar)] * 4
 pvalStar = stats.chisquare(obsStar, expStar)[1]
+
+# number of stars by restaurant proportion
+obsSR = obsStar
+expSR = [totalStar*x for x in propRest]
+pvalSR = stats.chisquare(obsSR, expSR)[1]
 
 ## Chi Square Tests
 
