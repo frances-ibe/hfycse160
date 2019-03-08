@@ -59,12 +59,15 @@ def zillowCSVWrite(zillowDataFrame, fileName="vegasHousing"):
 def zillPreProcess(fileNameIn, fileNameOut="vegasHousing", targetCity="Las Vegas"):
     """This function takes in the filename of the csv with zillow data as fileNameIn
     and takes in a fileNameOut and then also takes in a targetCity that is default
-    to Las Vegas"""
+    to Las Vegas
+
+    Returns: the dataframe which is saved to the .csv
+    """
     zillowDF1 = readInData(fileNameIn)
     zillowDict1 = usefulDict(zillowDF1, targetCity)
     zillowDF2 = dictToCSVDF(zillowDict1)
     zillowCSVWrite(zillowDF2, fileName=fileNameOut)
-    return None
+    return zillowDF2
 
 def zipcodeList(fileNameIn="Zip_Zhvi_Summary_AllHomes.csv", targetCity="Las Vegas"):
     """This Function takes in the fileNameIn of the csv with the zillow data in it
