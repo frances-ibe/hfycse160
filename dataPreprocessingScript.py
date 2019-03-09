@@ -1,10 +1,10 @@
-""" The following code performs ALL statistical testing for the completion of
-our CSE 160 final project. All supporting code and preprocessed data will be
+""" The following code performs data preprocessing for the completion of
+out CSE 160 final project. All supporting code and preprocessed data will be
 made available.
 
 Authors: Frances Ingram-Bate, Parker Grosjean, Nathaniel Linden
 
-Updated: March 7th 2019
+Updated: March 8th 2019
 
 Abbreviations (We will use these throughout the script):
 -  zhvi - zillow homw value index

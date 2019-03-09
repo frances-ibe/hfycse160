@@ -1,8 +1,19 @@
-# Nathaniel Linden, Parker Grosjean, Frances Ingram-Bate
-# Feb 12th 2019
-# CSE 160
-""" The following code reads the zillow housing data from its original
-form to a new csv with only the attributes of interest for our analysis."""
+""" The following code performs data preprocessing  of the zillow dataset
+for the completion of our CSE 160 final project.
+All supporting code and preprocessed data will be made available.
+
+Authors: Frances Ingram-Bate, Parker Grosjean, Nathaniel Linden
+
+Updated: March 8th 2019
+
+Abbreviations (We will use these throughout the script):
+-  zhvi - zillow homw value index
+-  avgPrice - average restuarant price
+-  yzi - yelp, zillow, IRS
+
+ The following code reads the zillow housing data from its original
+form to a new csv with only the attributes of interest for our analysis.
+"""
 
 # importing neccessary modules
 import pandas as pd
