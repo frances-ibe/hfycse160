@@ -172,8 +172,8 @@ plt.scatter(trainZHVI, trainAvgPrice, color="xkcd:black")
 predictline, = plt.plot(trainZHVI, predictedAvgPrice2, color="xkcd:aquamarine", linewidth=2)
 plt.title('Linear Regression Based Prediciton of Average Restaurant Price by Zillow Home Value Index', \
           fontsize=14, fontname='Arial', fontweight='bold')
-plt.xlabel('Income', fontsize=12, fontname='Arial', fontweight='bold')
-plt.ylabel('Zillow Home Value Index', fontsize=12, fontname='Arial', fontweight='bold')
+plt.xlabel('Zillow Home Value Index', fontsize=12, fontname='Arial', fontweight='bold')
+plt.ylabel('Avergae Restaurant Price', fontsize=12, fontname='Arial', fontweight='bold')
 labl = 'RSquared = ' + str(np.round(rsquaredMetrics2[0], 3))
 
 plt.legend(handles=[predictline], labels=[labl], loc=4)
