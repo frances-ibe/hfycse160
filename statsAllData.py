@@ -50,7 +50,6 @@ for zip in irsData["postalCode"]:
     # add the mean to the list
     d.append({"postalCode": zip, "avgPrice": np.mean(zipPrice)})
 yelpAvg = pd.DataFrame(d) # create a pandas data frame from this list
-print(yelpAvg)
 
 # merge yelp and zillow data
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
@@ -683,24 +682,24 @@ plt.savefig('comp_boxplot_ppoint_proportion_Ind.png')
 zipPassTests2 = zipPassTests[zipPassTests["postalCode"] != 89109]
 
 # removing the zipcodes that failed the test of independence
-aRIncomeInd2 = pd.merge(zipPassTests, aRIncome, on="postalCode")
-rRIncomeInd2 = pd.merge(zipPassTests, rRIncome, on="postalCode")
+aRIncomeInd2 = pd.merge(zipPassTests2, aRIncome, on="postalCode")
+rRIncomeInd2 = pd.merge(zipPassTests2, rRIncome, on="postalCode")
 
 # computing correlation matrices for the zipcodes that passed the ind test
 aRICorrInd2 = aRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
-print(aRICorrInd)
+# print(aRICorrInd2)
 rRICorrInd2 = rRIncomeInd2[[1, 2, 3, 4, "income"]].corr(method='pearson')
 # print(rRICorrInd)
 
 # removing the zipcodes that failed the test of independence
-aRZilInd2 = pd.merge(zipPassTests, aRZil, on="postalCode")
-rRZilInd2 = pd.merge(zipPassTests, rRZil, on="postalCode")
+aRZilInd2 = pd.merge(zipPassTests2, aRZil, on="postalCode")
+rRZilInd2 = pd.merge(zipPassTests2, rRZil, on="postalCode")
 
 # computing correlation matrices for the zipcodes that passed the ind test
 aRZCorrInd2 = aRZilInd2[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
-print(aRZCorrInd)
+# print(aRZCorrInd2)
 rRZCorrInd2 = rRZilInd2[[1, 2, 3, 4, "zhvi"]].corr(method='pearson')
-# print(rRZCorrInd)
+# print(rRZCorrInd2)
 
 
 
