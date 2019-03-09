@@ -1,51 +1,74 @@
 # Nathaniel Linden
 # Parker Grosjean
 # Frances Ingram-Bate
-import preProcessIRS as ppi
-import preProcessZillow as ppz
+""" The following code performs ALL statistical testing for the completion of
+out CSE 160 final project. All supporting code and preprocessed data will be
+made available.
+
+Authors: Frances Ingram-Bate, Nathaniel Linden, Parker Grossjean
+
+Updated: March 7th 2019
+
+Abbreviations (We will use these throughout the script):
+-  zhvi - zillow homw value index
+-  avgPrice - average restuarant price
+-  yzi - yelp, zillow, IRS
+
+Note: This code is requrires the preprocessed data files, alongside the geoJSON
+file in the same directory in order to compile.
+"""
+
+# Imports:
+# python modules
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import r2_score, mean_squared_error, explained_variance_score
 from scipy.stats import pearsonr
+
+# supporting scripts
 from spatialMapping import plot_spatialdata
 
-# Load Data
-zillowData = pd.read_csv("vegasHousing.csv")
+
+""" 1: Load Data """
+zillowData = pd.read_csv("vegasHousing.csv")  # zillow data from preprocessed csv
 zillowData.sort_values(by=["postalCode"])
 
-irsData = pd.read_csv("vegasIRS.csv")
+irsData = pd.read_csv("vegasIRS.csv")  # IRS data from preprocessed csv
 irsData.sort_values(by=["postalCode"])
 
-yelpData = pd.read_csv("vegasRest.csv")
+yelpData = pd.read_csv("vegasRest.csv") # yelp data from preprocessed csv
 yelpData.sort_values(by=["postalCode"])
 ### Note: the yelp data with city="Las Vegas" appears to have some mislabeled
 # data, some of the zip codes are in other cities such as 85705 in Tucson
 
-# average yelp rating
-d = []
+""" Compute average yelp rating """
+
+d = []  # empty list to store rating for each zip code
 for zip in irsData["postalCode"]:
+    # get all restaurants for a given zipcode
     zipPrice = yelpData[yelpData["postalCode"] == zip]["price"]
     zipPrice.astype(int)
+    # add the mean to the list
     d.append({"postalCode": zip, "avgPrice": np.mean(zipPrice)})
-yelpAvg = pd.DataFrame(d)
+yelpAvg = pd.DataFrame(d) # create a pandas data frame from this lisr
 
-#merge yelp and zillow data
+#merge yelp and zillow data frams into one new data frame for further analysis
 # yzi = zillowData.copy()
 yzi = pd.merge(irsData, zillowData[['postalCode', 'zhvi']], on='postalCode')
 yzi = pd.merge(yzi, yelpAvg[['postalCode', 'avgPrice']], on='postalCode')
 yziFilt = yzi[["income", "zhvi", "avgPrice"]]
-#
-# # # Compute Correlation Statistics Between household income and median home value
-# # # Will utilze the IRS dataset
+
+"""Compute Correlation Statistics Between household income and median home value """
+# # Will utilze the IRS dataset
 # corrDF = yziFilt.corr(method='pearson')
 # # print(corrDF)
 
 # # Plot Grid of Scatter Plots
 # fig1 = plt.figure()
 # # plt.subplot(3,1,1)
-# plt.plot(yzi["zhvi"], yzi["avgPrice"],'.')
+# plt.plot(yzi["zhvi"], yzi["avgPrice"],'.') # zhvi vs average price
 # plt.title('zhvi vs avgPrice')
 # # plt.subplot(3,1,2)
 # fig2 = plt.figure()
