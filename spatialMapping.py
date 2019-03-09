@@ -1,5 +1,5 @@
 """ The following code performs choropleth map create for the visualization of
-geographical data. Used  for the completion of our CSE 160 final project.
+geographical data. Used  for the completion of out CSE 160 final project.
 All supporting code and preprocessed data will be made available.
 
 Authors: Frances Ingram-Bate, Parker Grosjean, Nathaniel Linden
@@ -10,6 +10,9 @@ Abbreviations (We will use these throughout the script):
 -  zhvi - zillow homw value index
 -  avgPrice - average restuarant price
 -  yzi - yelp, zillow, IRS
+
+Note: This code is requrires the preprocessed data files, alongside the geoJSON
+file in the same directory in order to compile.
 """
 
 # imports
