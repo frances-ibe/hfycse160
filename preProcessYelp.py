@@ -67,7 +67,7 @@ def filterBusinessCity(businessList, targetCity):
     The elements of businessList MUST contain the followign keys:
      "business_id", "city","postal_code", "stars", "attributes"
     """
-    restaurantsList = []  # list to hold all restaurants form business list
+    restaurantsList = []  # list to hold all restaurants from business list
 
     if targetCity == None:
         for business in businessList:  # loop through all restaurants
