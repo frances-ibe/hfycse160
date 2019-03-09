@@ -32,7 +32,7 @@ def usefulDict(zillowDF, targetCity):
     return output_dict
 
 
-def dictToCSVDF(zillow_dict):
+def dictToCSVDF(zillow_dict, cols=("postalCode", "zhvi")):
     """This function takes in the dictionary with data of interest and generates
     a data frame with from the keys and values in the dictionary"""
 
@@ -44,8 +44,8 @@ def dictToCSVDF(zillow_dict):
         postCodes.append(key)
         zhviList.append(zillow_dict[key])
 
-    d["postalCode"] = postCodes
-    d["zhvi"] = zhviList
+    d[cols[0]] = postCodes
+    d[cols[1]] = zhviList
     zillowDF = pd.DataFrame(data=d)
     return zillowDF
 

@@ -25,16 +25,18 @@ def _zipCodeIncmeAvg(zipList, dfIRS):
     zippedIncomes = {}  # empty dictionary to hold answers
     # convert df to list of tuples
     tupListIRS = list(dfIRS.itertuples(index=False, name=None))
-    for zip in zipList:  # loop through all zipcodes
+    # print(tupListIRS)
+    cols = list(dfIRS)
+    filterZipList = sorted(list(set(dfIRS[cols[0]]) & set(zipList)))
+    for zip in filterZipList:  # loop through all zipcodes
         # get list of all incomes for that zip code from all data
         # use strNumToInt to convert to ints from strings
-        if zip in [zip for zip in tupListIRS[0]]:
-            agiList = [[_strNumToInt(val[1]), _strNumToInt(val[2])]
-                       for val in tupListIRS if val[0] == zip]
-            print([val[0] for val in agiList if val is not []])
-            avgAgi = sum([val[1] for val in agiList if val != []]) / sum([val[0] for val in agiList if val != []])
-            # update dicitonary with zipcodes and avg income
-            zippedIncomes[zip] = avgAgi * 1000  # account for fact that spreadsheet is in 1000s of dollars
+        agiList = [[_strNumToInt(val[1]), _strNumToInt(val[2])]
+                   for val in tupListIRS if val[0] == zip]
+
+        avgAgi = sum([val[1] for val in agiList]) / sum([val[0] for val in agiList])
+        # update dicitonary with zipcodes and avg income
+        zippedIncomes[zip] = avgAgi * 1000  # account for fact that spreadsheet is in 1000s of dollars
     return zippedIncomes
 
 
