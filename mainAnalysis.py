@@ -1,5 +1,5 @@
 """ The following code performs ALL statistical testing for the completion of
-out CSE 160 final project. All supporting code and preprocessed data will be
+our CSE 160 final project. All supporting code and preprocessed data will be
 made available.
 
 Authors: Frances Ingram-Bate, Parker Grosjean, Nathaniel Linden
