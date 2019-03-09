@@ -17,7 +17,7 @@ file in the same directory in order to compile.
 # imports
 import numpy as np
 import preProcessIRS as ppI
-import preProcess as ppY
+import preProcessYelp as ppY
 import preProcessZillow as ppZ
 import pandas as pd
 
